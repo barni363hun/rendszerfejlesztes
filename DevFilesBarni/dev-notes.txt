@@ -1,2 +1,4 @@
+- 
+https://youtu.be/PDiRDNNc2tw?si=U8qZR2K5NA6oR9QL
 - csináljunk class library-t meg egy main solution-t
 - nem értem ez a swagger editor kigenerálós dolgot
