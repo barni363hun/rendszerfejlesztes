@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ClassLibrary.Models
 {
-    internal class Project_Type
+    public class Project_Type
     {
         public int Id { get; set; }
         public string Name { get; set; }

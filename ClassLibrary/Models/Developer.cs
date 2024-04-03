@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ClassLibrary.Models
 {
-    internal class Developer
+    public class Developer
     {
         public int Id { get; set; }
         public string Name { get; set; }
