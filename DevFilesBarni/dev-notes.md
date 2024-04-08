@@ -1,0 +1,6 @@
+- fill DbContext based on [this video](https://youtu.be/PDiRDNNc2tw?si=U8qZR2K5NA6oR9QL) then in the _package manager console_ make migration with
+  - cd WebAPI
+  - dotnet ef migrations add Init
+  - dotnet ef database update
+- csináljunk class library-t meg egy main solution-t
+- nem értem ez a swagger editor kigenerálós dolgot
