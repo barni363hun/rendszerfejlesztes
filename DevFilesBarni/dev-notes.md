@@ -1,3 +1,9 @@
+- add test user and login
+  - dotnet ef migrations add AddTestUser
+  - fill the empty generated migration.cs
+  - dotnet ef database update
+  - add API Controller
+  - write it with chatGPT (use DTOs cause i like them 😊)
 - fill DbContext based on [this video](https://youtu.be/PDiRDNNc2tw?si=U8qZR2K5NA6oR9QL) then in the _package manager console_ make migration with
   - cd WebAPI
   - dotnet ef migrations add Init
