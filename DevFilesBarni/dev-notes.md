@@ -1,3 +1,5 @@
+- make test data
+  - **the index starts from 1 not 0**
 - add test user and login
   - dotnet ef migrations add AddTestUser
   - fill the empty generated migration.cs
