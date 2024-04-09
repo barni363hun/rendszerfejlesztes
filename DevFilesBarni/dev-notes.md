@@ -1,5 +1,6 @@
-- make test data
+- started making test data
   - **the index starts from 1 not 0**
+  - elementary issues with the models, restructuring
 - add test user and login
   - dotnet ef migrations add AddTestUser
   - fill the empty generated migration.cs

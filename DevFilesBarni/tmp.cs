@@ -9,32 +9,6 @@ namespace WebAPI.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            // Add test data for Developers table
-            migrationBuilder.InsertData(
-                table: "Developers",
-                columns: new[] { "Name", "Email" },
-                values: new object[] { "Barni", "barni@example.com" });
-            migrationBuilder.InsertData(
-                table: "Developers",
-                columns: new[] { "Name", "Email" },
-                values: new object[] { "Szabi", "szabi@example.com" });
-            migrationBuilder.InsertData(
-                table: "Developers",
-                columns: new[] { "Name", "Email" },
-                values: new object[] { "Ábel", "abel@example.com" });
-
-
-            // Add test data for Project_Types table
-            migrationBuilder.InsertData(
-                table: "Project_Types",
-                columns: new[] { "Name" },
-                values: new object[] { "Backend" });
-
-            migrationBuilder.InsertData(
-                table: "Project_Types",
-                columns: new[] { "Name" },
-                values: new object[] { "Frontend" });
-
 
             // Add test data for Projects table
             migrationBuilder.InsertData(
@@ -69,27 +43,6 @@ namespace WebAPI.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            // Remove the test data added in the Up method
-
-            // Remove test data from Developers table
-            migrationBuilder.DeleteData(
-                table: "Developers",
-                keyColumn: "Name",
-                keyValue: "Barni");
-            migrationBuilder.DeleteData(
-                table: "Developers",
-                keyColumn: "Name",
-                keyValue: "Szabi");
-
-            // Remove test data from Project_Types table
-            migrationBuilder.DeleteData(
-                table: "Project_Types",
-                keyColumn: "Name",
-                keyValue: "Frontend");
-            migrationBuilder.DeleteData(
-                table: "Project_Types",
-                keyColumn: "Name",
-                keyValue: "Backend");
 
             // Remove test data from Projects table
             migrationBuilder.DeleteData(
@@ -119,33 +72,6 @@ namespace WebAPI.Migrations
             //            keyValues: new object[] { i, j });
             //    }
             //}
-        }
-    }
-}
-
-
-using Microsoft.EntityFrameworkCore.Migrations;
-
-#nullable disable
-
-namespace WebAPI.Migrations
-{
-    public partial class AddTestUser : Migration
-    {
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.InsertData(
-                table: "Managers",
-                columns: new[] { "Name", "Email", "Password" },
-                values: new object[] { "Test Manager", "testmanager@example.com", "password123" });
-        }
-
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DeleteData(
-                table: "Managers",
-                keyColumn: "Name",
-                keyValue: "Test Manager");
         }
     }
 }
