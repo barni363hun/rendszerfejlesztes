@@ -10,7 +10,6 @@
   - PM> dotnet ef database update
 - WebAPI és BlazorApp projektek futtatása
 
-typeid helyett typename get project-be -> kész
 get all tasks
 list devs
 add task
