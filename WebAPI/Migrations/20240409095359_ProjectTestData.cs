@@ -9,11 +9,9 @@ namespace WebAPI.Migrations
     public partial class ProjectTestData : Migration
     {
 
-        private readonly DataContext _context;
-
-        public ProjectTestData(DataContext context)
+        public ProjectTestData()
         {
-            _context = context;
+
         }
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -47,6 +45,7 @@ namespace WebAPI.Migrations
         // Helper method to retrieve Id by name
         private int GetIdByName(string name)
         {
+
             var resultId = _context.Set<Project_Type>()
                                    .FirstOrDefault(e => e.Name == name)?.Id;
 
