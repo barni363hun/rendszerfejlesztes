@@ -11,8 +11,8 @@ using WebAPI;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240408203616_AddTestUser")]
-    partial class AddTestUser
+    [Migration("20240409093134_OuterTestData")]
+    partial class OuterTestData
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,11 +33,21 @@ namespace WebAPI.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("ManagerId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ManagerId");
+
+                    b.HasIndex("ProjectId");
 
                     b.ToTable("Tasks");
                 });
@@ -138,6 +148,25 @@ namespace WebAPI.Migrations
                     b.ToTable("DeveloperProject");
                 });
 
+            modelBuilder.Entity("ClassLibrary.Model.Task", b =>
+                {
+                    b.HasOne("ClassLibrary.Models.Manager", "Manager")
+                        .WithMany("Tasks")
+                        .HasForeignKey("ManagerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ClassLibrary.Models.Project", "Project")
+                        .WithMany("Tasks")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Manager");
+
+                    b.Navigation("Project");
+                });
+
             modelBuilder.Entity("ClassLibrary.Models.Project", b =>
                 {
                     b.HasOne("ClassLibrary.Models.Project_Type", "Type")
@@ -162,6 +191,16 @@ namespace WebAPI.Migrations
                         .HasForeignKey("ProjectsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("ClassLibrary.Models.Manager", b =>
+                {
+                    b.Navigation("Tasks");
+                });
+
+            modelBuilder.Entity("ClassLibrary.Models.Project", b =>
+                {
+                    b.Navigation("Tasks");
                 });
 
             modelBuilder.Entity("ClassLibrary.Models.Project_Type", b =>

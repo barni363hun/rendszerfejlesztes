@@ -1,1 +1,4 @@
 .vs
+WebAPI/sqlite.db-wal
+WebAPI/sqlite.db-shm
+WebAPI/sqlite.db
