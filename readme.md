@@ -1,8 +1,16 @@
 # futtatáshoz
 
 - redmine.sln megnyitása
-- ha nincs akkor EntityFrameWorkCore telepítése
+- ha nincs akkor EntityFrameWorkCore, EntityFrameWorkCore.Design, EntityFrameWorkCore.Sqlite telepítése
 - package manager console
 - (fejlesztőknek) ha van a WebAPI mappában sqlite.db fájl töröld
-- _dotnet ef database update_ command létrehozza az adatbázist tesztadatokkal
+- adatbázis létrehozása tesztadatokkal
+  - PM> cd WebAPI
+  - PM> dotnet tool install --global dotnet-ef
+  - PM> dotnet ef database update
 - WebAPI és BlazorApp projektek futtatása
+
+typeid helyett typename get project-be -> kész
+get all tasks
+list devs
+add task
