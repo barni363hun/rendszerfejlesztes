@@ -1,15 +1,15 @@
-using Microsoft.EntityFrameworkCore.Migrations;
-using System;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace WebAPI.Migrations
 {
-    public partial class AddTestData : Migration
+    /// <inheritdoc />
+    public partial class DevProjTestConnections : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-
 
             // Connect developers to projects
             for (int i = 1; i <= 3; i++)
@@ -24,8 +24,10 @@ namespace WebAPI.Migrations
             }
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+
             // Disconnect developers from projects
             for (int i = 1; i <= 3; i++)
             {

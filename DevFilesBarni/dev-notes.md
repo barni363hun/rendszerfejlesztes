@@ -1,6 +1,8 @@
 - started making test data
   - **the index starts from 1 not 0**
   - elementary issues with the models, restructuring
+  - _dotnet ef database update 0_ rolls back before init
+    'FOREIGN KEY constraint failed'.
 - add test user and login
   - dotnet ef migrations add AddTestUser
   - fill the empty generated migration.cs
