@@ -1,3 +1,4 @@
+- made endpoints
 - started making test data
   - **the index starts from 1 not 0 in sqlite**
   - elementary issues with the models, foreign keys and others
