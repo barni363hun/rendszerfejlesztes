@@ -11,8 +11,8 @@ using WebAPI;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240409093334_InnerTestData")]
-    partial class InnerTestData
+    [Migration("20240409095359_ProjectTestData")]
+    partial class ProjectTestData
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
