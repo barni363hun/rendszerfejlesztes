@@ -1,7 +1,8 @@
 - started making test data
-  - **the index starts from 1 not 0**
-  - elementary issues with the models, restructuring
-  - _dotnet ef database update 0_ rolls back before init
+  - **the index starts from 1 not 0 in sqlite**
+  - elementary issues with the models, foreign keys and others
+  - made migrations
+  - _dotnet ef database update 0_ command rolls back before Init migration
 - add test user and login
   - dotnet ef migrations add AddTestUser
   - fill the empty generated migration.cs
