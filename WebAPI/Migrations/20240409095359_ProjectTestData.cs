@@ -8,11 +8,6 @@ namespace WebAPI.Migrations
 {
     public partial class ProjectTestData : Migration
     {
-
-        public ProjectTestData()
-        {
-
-        }
         protected override void Up(MigrationBuilder migrationBuilder)
         {
 
@@ -20,11 +15,11 @@ namespace WebAPI.Migrations
             migrationBuilder.InsertData(
                 table: "Projects",
                 columns: new[] { "Name", "TypeId", "Description" },
-                values: new object[] { "WebAPI", GetIdByName("Backend"), "Backend solution" });
+                values: new object[] { "WebAPI", 1, "Backend solution" });
             migrationBuilder.InsertData(
                 table: "Projects",
                 columns: new[] { "Name", "TypeId", "Description" },
-                values: new object[] { "BlazorApp", GetIdByName("Frontend"), "Frontend solution" });
+                values: new object[] { "BlazorApp", 2, "Frontend solution" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -39,24 +34,6 @@ namespace WebAPI.Migrations
                 keyColumn: "Name",
                 keyValue: "BlazorApp");
 
-        }
-
-
-        // Helper method to retrieve Id by name
-        private int GetIdByName(string name)
-        {
-
-            var resultId = _context.Set<Project_Type>()
-                                   .FirstOrDefault(e => e.Name == name)?.Id;
-
-            if (resultId == null)
-            {
-                throw new Exception($"{name} Name is not found in Project_Type.");
-            }
-            else
-            {
-                return resultId.Value;
-            }
         }
 
     }
