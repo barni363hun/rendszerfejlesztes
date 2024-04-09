@@ -9,7 +9,3 @@
   - PM> dotnet tool install --global dotnet-ef
   - PM> dotnet ef database update
 - WebAPI és BlazorApp projektek futtatása
-
-get all tasks
-list devs
-add task
