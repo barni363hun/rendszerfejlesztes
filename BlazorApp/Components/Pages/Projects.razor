@@ -39,7 +39,7 @@ else
                 {
                     <tr>
                         <td>@project.id</td>
-                        <td>@project.name</td>
+                        <td><a href="#" @onclick="(e) => Navigate(e, project.id)">@project.name</a></td>
                         <td>@project.type.name</td>
                         <td>@project.description</td>
                     </tr>
@@ -97,5 +97,11 @@ else
     {
         selectionId = Convert.ToInt32(e.Value);
         Logger.LogWarning("Seletion Changed: " + selectionId);
+    }
+
+    private void Navigate(MouseEventArgs e, int projectId)
+    {
+        Logger.LogWarning("Navigate to: " + projectId);
+        NavigationManager.NavigateTo($"projects/{projectId}/tasks");
     }
 }
