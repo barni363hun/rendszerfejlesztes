@@ -1,0 +1,42 @@
+{
+    "client": "Thunder Client",
+    "collectionName": "rendszerfejl",
+    "dateExported": "2024-04-10T17:38:21.129Z",
+    "version": "1.1",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "a69892d8-94f5-4995-b4f9-0be960fd3a61",
+            "colId": "c21cb297-9921-4dd8-93dc-37177b3a9b08",
+            "containerId": "",
+            "name": "create task",
+            "url": "http://localhost:5005/Task",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2024-04-10T17:34:40.672Z",
+            "modified": "2024-04-10T17:34:40.672Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\": \"string\",\n  \"description\": \"string\",\n  \"projectId\": 1,\n  \"managerId\": 1,\n  \"deadline\": \"2024-04-10T17:23:01.984Z\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "4b4c2011-ef72-40a2-b5bf-199c279e9b7b",
+            "colId": "c21cb297-9921-4dd8-93dc-37177b3a9b08",
+            "containerId": "",
+            "name": "get tasks",
+            "url": "http://localhost:5005/Task",
+            "method": "GET",
+            "sortNum": 20000,
+            "created": "2024-04-10T17:34:49.820Z",
+            "modified": "2024-04-10T17:34:57.258Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        }
+    ]
+}
