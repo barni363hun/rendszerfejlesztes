@@ -45,11 +45,14 @@ namespace WebAPI.Controllers
                 name = task.Name,
                 description = task.Description,
                 managerId = task.ManagerId,
-                projectId = task.ProjectId
+                projectId = task.ProjectId,
+                manager = manager,
+                project = project
+
             };
             await _context.Tasks.AddAsync(newTask);
             await _context.SaveChangesAsync();
-            return Ok(await _context.Tasks.ToListAsync());
+            return Ok();
         }
     }
 }
