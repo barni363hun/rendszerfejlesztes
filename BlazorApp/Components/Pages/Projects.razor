@@ -3,11 +3,12 @@
 @using Newtonsoft.Json
 @inject ILogger<Projects> Logger
 @attribute [StreamRendering]
+@rendermode InteractiveServer
 
 <PageTitle>Project</PageTitle>
 
 <h1>Projects</h1>
-<button @onclick="ButtonClick">Button</button>
+Project Type:
 
 @if (projects == null)
 {
@@ -16,7 +17,7 @@
 else
 {
     <select @onchange="SelectionChanged">
-        <option value="none">None</option>
+        <option value="-1">All</option>
         @foreach (var item in types)
         {
             <option value="@item.id">@item.name</option>
@@ -34,12 +35,15 @@ else
         <tbody>
             @foreach (var project in projects)
             {
-                <tr>
-                    <td>@project.id</td>
-                    <td>@project.name</td>
-                    <td>@project.type.name</td>
-                    <td>@project.description</td>
-                </tr>
+                @if (project.type.id == selectionId || selectionId == -1)
+                {
+                    <tr>
+                        <td>@project.id</td>
+                        <td>@project.name</td>
+                        <td>@project.type.name</td>
+                        <td>@project.description</td>
+                    </tr>
+                }
             }
         </tbody>
     </table>
@@ -48,6 +52,7 @@ else
 @code {
     private List<Project>? projects;
     HashSet<ProjectType> types = new HashSet<ProjectType>();
+    int selectionId = -1;
     //private Project project;
     protected override async Task OnInitializedAsync()
     {
@@ -86,14 +91,11 @@ else
 
 
 
-    private void ButtonClick()
-    {
-        Logger.LogWarning("Someone has clicked me!");
-    }
+
 
     private void SelectionChanged(ChangeEventArgs e)
     {
-        Logger.LogWarning("Seletion Changed: " + e.Value);
-        throw new NotImplementedException();
+        selectionId = Convert.ToInt32(e.Value);
+        Logger.LogWarning("Seletion Changed: " + selectionId);
     }
 }
