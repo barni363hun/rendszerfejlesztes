@@ -1,10 +1,13 @@
-﻿@page "/project"
+﻿@page "/"
 @using ClassLibrary.Models
+@using Newtonsoft.Json
+@inject ILogger<Projects> Logger
 @attribute [StreamRendering]
 
 <PageTitle>Project</PageTitle>
 
 <h1>Projects</h1>
+<button @onclick="ButtonClick">Button</button>
 
 @if (projects == null)
 {
@@ -12,23 +15,30 @@
 }
 else
 {
+    <select @onchange="SelectionChanged">
+        <option value="none">None</option>
+        @foreach (var item in types)
+        {
+            <option value="@item.id">@item.name</option>
+        }
+    </select>
     <table class="table">
         <thead>
             <tr>
+                <th>ID</th>
                 <th>Name</th>
                 <th>Type</th>
-                <th>Des. (F)</th>
-                <th>Summary</th>
+                <th>Desctiption</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var forecast in projects)
+            @foreach (var project in projects)
             {
                 <tr>
-                    <td>@forecast.Date.ToShortDateString()</td>
-                    <td>@forecast.TemperatureC</td>
-                    <td>@forecast.TemperatureF</td>
-                    <td>@forecast.Summary</td>
+                    <td>@project.id</td>
+                    <td>@project.name</td>
+                    <td>@project.type.name</td>
+                    <td>@project.description</td>
                 </tr>
             }
         </tbody>
@@ -36,28 +46,54 @@ else
 }
 
 @code {
-    private Project[]? projects;
-
+    private List<Project>? projects;
+    HashSet<ProjectType> types = new HashSet<ProjectType>();
+    //private Project project;
     protected override async Task OnInitializedAsync()
     {
-        // Simulate asynchronous loading to demonstrate streaming rendering
-        await Task.Delay(500);
-
-        var startDate = DateOnly.FromDateTime(DateTime.Now);
-        var summaries = new[] { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching" };
-        projects = Enumerable.Range(1, 5).Select(index => new WeatherForecast
+        var settings = new JsonSerializerSettings();
+        try
         {
-            Date = startDate.AddDays(index),
-            TemperatureC = Random.Shared.Next(-20, 55),
-            Summary = summaries[Random.Shared.Next(summaries.Length)]
-        }).ToArray();
+            HttpClient httpClient = new HttpClient();
+            HttpResponseMessage response = await httpClient.GetAsync("http://localhost:5005/api/Project");
+            var result = await response.Content.ReadAsStringAsync();
+            //Logger.LogWarning(result);
+            if (response.IsSuccessStatusCode)
+            {
+                projects = JsonConvert.DeserializeObject<List<Project>>(result, settings);
+                Logger.LogWarning("Succesful api reguest!");
+            }
+            else
+            {
+                Logger.LogWarning("Unsuccesful api reguest!");
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogWarning("api failed: " + ex.Message);
+        }
+
+        if (projects != null)
+        {
+
+            foreach (var item in projects)
+            {
+                types.Add(item.type);
+            }
+
+        }
     }
 
-    private class WeatherForecast
+
+
+    private void ButtonClick()
     {
-        public DateOnly Date { get; set; }
-        public int TemperatureC { get; set; }
-        public string? Summary { get; set; }
-        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+        Logger.LogWarning("Someone has clicked me!");
+    }
+
+    private void SelectionChanged(ChangeEventArgs e)
+    {
+        Logger.LogWarning("Seletion Changed: " + e.Value);
+        throw new NotImplementedException();
     }
 }
