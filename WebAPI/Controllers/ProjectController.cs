@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace WebAPI.Controllers
 {
@@ -24,9 +26,17 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Project>>>GetAllProjects(){
-        return Ok(await _context.Projects.ToListAsync());
-                }
+        public async Task<ActionResult<List<Project>>> GetAllProjects()
+        {
+            var options = new JsonSerializerOptions
+            {
+                ReferenceHandler = ReferenceHandler.Preserve
+            };
+
+            var projects = await _context.Projects.Include(p => p.type).ToListAsync();
+            var jsonProjects = JsonSerializer.Serialize(projects, options);
+            return Content(jsonProjects, "application/json");
+        }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Project>> GetProject(int id)

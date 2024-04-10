@@ -1,0 +1,102 @@
+﻿@page "/"
+@using ClassLibrary.Models
+@using Newtonsoft.Json
+@inject ILogger<Projects> Logger
+@attribute [StreamRendering]
+@rendermode InteractiveServer
+
+<PageTitle>Project</PageTitle>
+
+<h1>Projects</h1>
+Project Type:
+
+@if (projects == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <select @onchange="SelectionChanged">
+        <option value="-1">All</option>
+        @foreach (var item in types)
+        {
+            <option value="@item.id">@item.name</option>
+        }
+    </select>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Desctiption</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var project in projects)
+            {
+                @if (project.type.id == selectionId || selectionId == -1)
+                {
+                    <tr>
+                        <td>@project.id</td>
+                        <td>@project.name</td>
+                        <td>@project.type.name</td>
+                        <td>@project.description</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Project>? projects;
+    HashSet<ProjectType> types = new HashSet<ProjectType>();
+    int selectionId = -1;
+    //private Project project;
+    protected override async Task OnInitializedAsync()
+    {
+        var settings = new JsonSerializerSettings();
+        try
+        {
+            Logger.LogWarning("Before API call");
+            HttpClient httpClient = new HttpClient();
+            HttpResponseMessage response = await httpClient.GetAsync("http://localhost:5005/api/Project");
+            var result = await response.Content.ReadAsStringAsync();
+            //Logger.LogWarning(result);
+            if (response.IsSuccessStatusCode)
+            {
+                projects = JsonConvert.DeserializeObject<List<Project>>(result, settings);
+                Logger.LogWarning("Succesful api reguest!");
+            }
+            else
+            {
+                Logger.LogWarning("Unsuccesful api reguest!");
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogWarning("api failed: " + ex.Message);
+        }
+
+        if (projects != null)
+        {
+
+            foreach (var item in projects)
+            {
+                types.Add(item.type);
+            }
+
+        }
+    }
+
+
+
+
+
+    private void SelectionChanged(ChangeEventArgs e)
+    {
+        selectionId = Convert.ToInt32(e.Value);
+        Logger.LogWarning("Seletion Changed: " + selectionId);
+    }
+}

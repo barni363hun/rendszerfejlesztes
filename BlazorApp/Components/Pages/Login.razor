@@ -1,0 +1,60 @@
+﻿@page "/login"
+
+<div class="text-center">
+    <EditForm class="form-signin mb-4" Model="@_credential" OnValidSubmit="@Authenticate" FormName ="LoginForm">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="form-group">
+            <label for="user-name">User name</label>
+            <InputText class="form-control" id="user-name" placeholder="Username" @bind-Value="_credential.UserName" />
+            <ValidationMessage For="@(() => _credential.UserName)" />
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <InputText type="password" class="form-control" id="password" placeholder="Password" @bind-Value="_credential.Password" />
+            <ValidationMessage For="@(() => _credential.Password)" />
+        </div>
+        <div class="form-group">
+            <button type="submit" id="login" name="login" class="btn btn-primary">Login</button>
+        </div>
+    </EditForm>
+</div>
+
+@if (@LoginMessage != null)
+{
+    <p class="">@LoginMessage</p>
+}
+
+@code {
+    public class Credential 
+    { 
+        public string UserName { get; set; }
+        public string Password { get; set; }  
+
+    }
+    private Credential _credential = new Credential();
+
+    public string LoginMessage;
+    public string LogMessage;
+    private async Task Authenticate()
+    {
+        bool isAuthenticated = await LoginAsync(_credential.UserName, _credential.Password);
+        if (!isAuthenticated)
+        {
+            LoginMessage = "Invalid login!";
+        }
+        else
+        {
+            LoginMessage = "Succesfull login!";
+        }
+    }
+    public async Task<bool> LoginAsync(string username, string password)
+    {
+        if (username == "admin" && password == "admin")
+        {
+            await Task.Delay(10);
+            return true;
+        }
+        return false;
+    }
+}

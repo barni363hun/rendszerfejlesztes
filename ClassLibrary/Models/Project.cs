@@ -8,13 +8,13 @@ namespace ClassLibrary.Models
 {
     public class Project
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public int TypeId { get; set; }
+        public int id { get; set; }
+        public string name { get; set; }
+        public int typeId { get; set; }
         [ForeignKey("TypeId")]
-        public Project_Type Type { get; set; }
-        public List<ClassLibrary.Model.Task> Tasks{ get; set; }
-        public string Description { get; set; }
-        public List<Developer> Developers { get; set; }
+        public ProjectType type { get; set; }
+        public List<ClassLibrary.Model.Task> tasks{ get; set; }
+        public string description { get; set; }
+        public List<Developer> developers { get; set; }
     }
 }

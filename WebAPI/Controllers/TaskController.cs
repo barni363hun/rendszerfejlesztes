@@ -1,5 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using ClassLibrary.Model;
+using ClassLibrary.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 namespace WebAPI.Controllers
 {
@@ -8,23 +12,24 @@ namespace WebAPI.Controllers
     public class TaskController : ControllerBase
     {
 
-        private readonly ILogger<TaskController> _logger;
-
-        public TaskController(ILogger<TaskController> logger)
+        private readonly DataContext _context;
+        public TaskController(DataContext context)
         {
-            _logger = logger;
+            this._context = context;
         }
 
-        [HttpGet(Name = "GetTasks")]
-        public IEnumerable<ClassLibrary.Model.Task> Get()
+        [HttpGet]
+        public async Task<ActionResult<List<ClassLibrary.Model.Task>>> GetAllTasks()
         {
-            return Enumerable.Range(1, 5).Select(index => new ClassLibrary.Model.Task
-            {
-                Deadline = new DateTime(2024,4,3),
-                Name = "Task" + index.ToString(),
-                Description = "Description"
-            })
-            .ToArray();
+            return Ok(await _context.Tasks.ToListAsync());
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<List<ClassLibrary.Model.Task>>> AddTask(ClassLibrary.Model.Task task)
+        {
+            _context.Tasks.Add(task);
+            await _context.SaveChangesAsync();
+            return Ok(await _context.Projects.ToListAsync());
         }
     }
 }
