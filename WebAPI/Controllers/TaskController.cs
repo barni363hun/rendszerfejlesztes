@@ -4,6 +4,8 @@ using ClassLibrary.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 using System.Text.Json;
+using ClassLibrary.DTOs;
+
 
 namespace WebAPI.Controllers
 {
@@ -25,11 +27,29 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<List<ClassLibrary.Model.Task>>> AddTask(ClassLibrary.Model.Task task)
+        public async Task<ActionResult<ClassLibrary.Model.Task>> AddTask(TaskDTO task)
         {
-            _context.Tasks.Add(task);
+            Project? project = await _context.Projects.FindAsync(task.ProjectId);
+            if (project == null)
+            {
+                return BadRequest("project not found");
+            }
+            Manager? manager = await _context.Managers.FindAsync(task.ManagerId);
+            if (manager == null)
+            {
+                return BadRequest("manager not found");
+            }
+            ClassLibrary.Model.Task newTask = new ClassLibrary.Model.Task
+            {
+                deadline = task.Deadline,
+                name = task.Name,
+                description = task.Description,
+                managerId = task.ManagerId,
+                projectId = task.ProjectId
+            };
+            await _context.Tasks.AddAsync(newTask);
             await _context.SaveChangesAsync();
-            return Ok(await _context.Projects.ToListAsync());
+            return Ok(await _context.Tasks.ToListAsync());
         }
     }
 }
