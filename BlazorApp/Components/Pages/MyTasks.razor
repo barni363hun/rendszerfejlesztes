@@ -1,0 +1,86 @@
+﻿@page "/mytasks"
+@using ClassLibrary.Models
+@using Newtonsoft.Json
+@using System.Text
+@inject ILogger<Projects> Logger
+@attribute [StreamRendering]
+@rendermode InteractiveServer
+
+
+<PageTitle>My Tasks</PageTitle>
+
+<h1>My Tasks</h1>
+
+@if (tasks == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Deadline</th>
+                @* <th>Manager</th> *@
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in tasks)
+            {
+                if (@item.managerId == managerId) 
+                {
+                    <tr>
+                        <td>@item.id</td>
+                        <td>@item.name</td>
+                        <td>@item.description</td>
+                        @if (item.deadline < DateTime.Today.AddMonths(1)) @*check if deadline is soon*@
+                        {
+                            <td style="background-color:red">@item.deadline</td>
+                        }
+                        else
+                        {
+                        <td>@item.deadline</td>
+                        }
+                        @* <td>@item.manager.name</td> *@
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<ClassLibrary.Model.Task>? tasks;
+
+    int managerId = 1; //later change it to whoever is logged in
+
+    protected override async Task OnInitializedAsync()
+    {
+        var settings = new JsonSerializerSettings();
+        try
+        {
+            HttpClient httpClient = new HttpClient();
+            HttpResponseMessage response = await httpClient.GetAsync("http://localhost:5005/Task");
+            var result = await response.Content.ReadAsStringAsync();
+            //Logger.LogWarning(result);
+            if (response.IsSuccessStatusCode)
+            {
+                tasks = JsonConvert.DeserializeObject<List<ClassLibrary.Model.Task>>(result, settings);
+                Logger.LogWarning("Succesful api fetch!");
+            }
+            else
+            {
+                Logger.LogWarning("Unsuccesful api fetch!");
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogWarning("api failed: " + ex.Message);
+        }
+        
+    }
+
+}

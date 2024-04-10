@@ -1,0 +1,135 @@
+﻿@page "/projects/{projectId}/tasks"
+@using ClassLibrary.Models
+@using Newtonsoft.Json
+@using System.Text
+@inject ILogger<Projects> Logger
+@attribute [StreamRendering]
+@rendermode InteractiveServer
+
+
+<PageTitle>Tasks for project @projectId</PageTitle>
+
+<h1>Tasks for project @projectId</h1>
+
+@if (tasks == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Deadline</th>
+                @* <th>Manager</th> *@
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in tasks)
+            {
+                if (@item.projectId == Convert.ToInt32(@projectId))
+                {
+                    <tr>
+                        <td>@item.id</td>
+                        <td>@item.name</td>
+                        <td>@item.description</td>
+                        <td>@item.deadline</td>
+                        @* <td>@item.manager.name</td> *@
+                    </tr>
+                }
+            }
+            <tr>
+                <td><button @onclick="AddTask">Add New Task</button></td>
+                <td><input type="text" @bind="newTaskName" placeholder="Enter task name" /></td>
+                <td><input type="text" @bind="newTaskDescription" placeholder="Enter task description" /></td>
+                <td><input type="date" @bind="newTaskDeadline" /></td>
+            </tr>
+        </tbody>
+    </table>
+}
+
+@code {
+    [Parameter]
+    public string projectId { get; set; }
+
+    private List<ClassLibrary.Model.Task>? tasks;
+
+    private string newTaskName;
+    private string newTaskDescription;
+    private DateTime newTaskDeadline = DateTime.Today.AddMonths(2); // Set default date to two months from current date
+
+    protected override async Task OnInitializedAsync()
+    {
+        var settings = new JsonSerializerSettings();
+        try
+        {
+            HttpClient httpClient = new HttpClient();
+            HttpResponseMessage response = await httpClient.GetAsync("http://localhost:5005/Task");
+            var result = await response.Content.ReadAsStringAsync();
+            //Logger.LogWarning(result);
+            if (response.IsSuccessStatusCode)
+            {
+                tasks = JsonConvert.DeserializeObject<List<ClassLibrary.Model.Task>>(result, settings);
+                Logger.LogWarning("Succesful api fetch!");
+            }
+            else
+            {
+                Logger.LogWarning("Unsuccesful api fetch!");
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogWarning("api failed: " + ex.Message);
+        }
+    }
+
+    private async void AddTask()
+    {
+        ClassLibrary.Model.Task newTask = new ClassLibrary.Model.Task
+        {
+            name = newTaskName,
+            description = newTaskDescription,
+            deadline = newTaskDeadline,
+            projectId = Convert.ToInt32(this.projectId),
+            managerId = 1,
+            id = tasks.Last().id + 1
+        };
+        // try
+        // {
+        //     HttpClient httpClient = new HttpClient();
+        //     string json = JsonConvert.SerializeObject(newTask);
+        //     var content = new StringContent(json, Encoding.UTF8, "application/json");
+        //     HttpResponseMessage response = await httpClient.PostAsync("http://localhost:5005/Task", content);
+        //     if (response.IsSuccessStatusCode)
+        //     {
+        //         Logger.LogWarning("Succesful api post!");
+        //     }
+        //     else
+        //     {
+        //         Logger.LogWarning("Unsuccesful api post!");
+        //         Logger.LogWarning(response.StatusCode.ToString());
+        //         //json = await response.Content.ReadAsStringAsync();
+        //         Logger.LogWarning(json);
+        //     }
+        //     
+        // }
+        // catch (Exception ex)
+        // {
+        //     Logger.LogWarning(ex.Message);
+        // }
+        
+        tasks.Add(newTask);
+
+        // Clear input fields after adding task
+        newTaskName = string.Empty;
+        newTaskDescription = string.Empty;
+        newTaskDeadline = DateTime.Today;
+    }
+
+
+
+
+}
