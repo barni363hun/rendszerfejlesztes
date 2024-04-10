@@ -10,15 +10,15 @@ namespace ClassLibrary.Model
 {
     public class Task
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public int ProjectId { get; set; }
+        public int id { get; set; }
+        public string name { get; set; }
+        public string description { get; set; }
+        public int projectId { get; set; }
         [ForeignKey("ProjectId")]
-        public Project Project { get; set; }
-        public int ManagerId { get; set; }
+        public Project project { get; set; }
+        public int managerId { get; set; }
         [ForeignKey("ManagerId")]
-        public Manager Manager { get; set; }
-        public DateTime Deadline { get; set; }
+        public Manager manager { get; set; }
+        public DateTime deadline { get; set; }
     }
 }

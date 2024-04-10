@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace ClassLibrary.Models
 {
-    public class Project_Type
+    public class ProjectType
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public List<Project> Projects { get; set; }
+        public int id { get; set; }
+        public string name { get; set; }
+        public List<Project> projects { get; set; }
     }
 }

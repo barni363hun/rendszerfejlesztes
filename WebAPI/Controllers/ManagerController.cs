@@ -19,14 +19,14 @@ namespace WebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Manager>> LoginManager(ManagerLoginDTO loginDTO)
         {
-            var manager = await _context.Managers.FirstOrDefaultAsync(m => m.Email == loginDTO.Email);
+            var manager = await _context.Managers.FirstOrDefaultAsync(m => m.email == loginDTO.Email);
             if (manager == null)
             {
                 return NotFound("User with this email not found.");
             }
             else
             {
-                if (manager.Password == loginDTO.Password)
+                if (manager.password == loginDTO.Password)
                 {
                     return Ok(manager);
                 }

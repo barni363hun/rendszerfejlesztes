@@ -33,7 +33,7 @@ namespace WebAPI.Controllers
                 ReferenceHandler = ReferenceHandler.Preserve
             };
 
-            var projects = await _context.Projects.Include(p => p.Type).ToListAsync();
+            var projects = await _context.Projects.Include(p => p.type).ToListAsync();
             var jsonProjects = JsonSerializer.Serialize(projects, options);
             return Content(jsonProjects, "application/json");
         }
