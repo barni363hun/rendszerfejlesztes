@@ -25,11 +25,6 @@
     <p class="">@LoginMessage</p>
 }
 
-@if (@LogMessage != null)
-{
-    <p class="">@LogMessage</p>
-}
-
 @code {
     public class Credential 
     { 
@@ -43,10 +38,6 @@
     public string LogMessage;
     private async Task Authenticate()
     {
-        if (_credential.UserName == null)
-        {
-            LogMessage = "Mi a rákért vagy te null?!";
-        }
         bool isAuthenticated = await LoginAsync(_credential.UserName, _credential.Password);
         if (!isAuthenticated)
         {
