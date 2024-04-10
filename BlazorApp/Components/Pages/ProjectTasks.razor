@@ -1,15 +1,17 @@
-﻿@page "/"
+﻿@page "/Projects/{projectId}/Tasks"
 @using ClassLibrary.Models
 @using Newtonsoft.Json
 @inject ILogger<Projects> Logger
-@* @attribute [StreamRendering] *@
+@attribute [StreamRendering]
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
 
-<PageTitle>Project</PageTitle>
 
-<h1>Projects</h1>
+<PageTitle>Tasks</PageTitle>
+
+<h1>Tasks for project</h1>
 Project Type:
+
 @if (projects == null)
 {
     <p><em>Loading...</em></p>
@@ -51,7 +53,7 @@ else
 
 @code {
     private List<Project>? projects;
-    HashSet<ProjectType> types = new HashSet<ProjectType>();
+    HashSet<ProjectType>? types = new HashSet<ProjectType>();
     int selectionId = -1;
     //private Project project;
     protected override async Task OnInitializedAsync()
