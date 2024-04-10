@@ -59,10 +59,11 @@ else
         var settings = new JsonSerializerSettings();
         try
         {
+            Logger.LogWarning("Before API call");
             HttpClient httpClient = new HttpClient();
             HttpResponseMessage response = await httpClient.GetAsync("http://localhost:5005/api/Project");
             var result = await response.Content.ReadAsStringAsync();
-            //Logger.LogWarning(result);
+            Logger.LogWarning(result);
             if (response.IsSuccessStatusCode)
             {
                 projects = JsonConvert.DeserializeObject<List<Project>>(result, settings);
