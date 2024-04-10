@@ -17,14 +17,6 @@ namespace WebAPI.Controllers
             this._context = context;
         }
 
-        [HttpPost]
-        public async Task<ActionResult<List<Project>>> AddProject(Project project)
-        {
-            _context.Projects.Add(project);
-            await _context.SaveChangesAsync();
-            return Ok(await _context.Projects.ToListAsync());
-        }
-
         [HttpGet]
         public async Task<ActionResult<List<Project>>> GetAllProjects()
         {
