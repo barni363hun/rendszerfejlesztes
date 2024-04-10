@@ -5,6 +5,7 @@
 @inject ILogger<Projects> Logger
 @attribute [StreamRendering]
 @rendermode InteractiveServer
+@inject NavigationManager NavigationManager
 
 
 <PageTitle>Tasks for project @projectId</PageTitle>
@@ -97,36 +98,37 @@ else
             managerId = 1,
             id = tasks.Last().id + 1
         };
-        // try
-        // {
-        //     HttpClient httpClient = new HttpClient();
-        //     string json = JsonConvert.SerializeObject(newTask);
-        //     var content = new StringContent(json, Encoding.UTF8, "application/json");
-        //     HttpResponseMessage response = await httpClient.PostAsync("http://localhost:5005/Task", content);
-        //     if (response.IsSuccessStatusCode)
-        //     {
-        //         Logger.LogWarning("Succesful api post!");
-        //     }
-        //     else
-        //     {
-        //         Logger.LogWarning("Unsuccesful api post!");
-        //         Logger.LogWarning(response.StatusCode.ToString());
-        //         //json = await response.Content.ReadAsStringAsync();
-        //         Logger.LogWarning(json);
-        //     }
-        //     
-        // }
-        // catch (Exception ex)
-        // {
-        //     Logger.LogWarning(ex.Message);
-        // }
-        
-        tasks.Add(newTask);
+        try
+        {
+            HttpClient httpClient = new HttpClient();
+            string json = JsonConvert.SerializeObject(newTask);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await httpClient.PostAsync("http://localhost:5005/Task", content);
+            if (response.IsSuccessStatusCode)
+            {
+                Logger.LogWarning("Succesful api post!");
+            }
+            else
+            {
+                Logger.LogWarning("Unsuccesful api post!");
+                Logger.LogWarning(response.StatusCode.ToString());
+                //json = await response.Content.ReadAsStringAsync();
+                Logger.LogWarning(json);
+            }
 
-        // Clear input fields after adding task
-        newTaskName = string.Empty;
-        newTaskDescription = string.Empty;
-        newTaskDeadline = DateTime.Today;
+        }
+        catch (Exception ex)
+        {
+            Logger.LogWarning(ex.Message);
+        }
+        
+        NavigationManager.NavigateTo(NavigationManager.Uri, true);
+        // tasks.Add(newTask);
+
+        // // Clear input fields after adding task
+        // newTaskName = string.Empty;
+        // newTaskDescription = string.Empty;
+        // newTaskDeadline = DateTime.Today;
     }
 
 

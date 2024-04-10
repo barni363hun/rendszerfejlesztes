@@ -36,7 +36,7 @@ else
                         <td>@item.id</td>
                         <td>@item.name</td>
                         <td>@item.description</td>
-                        @if (item.deadline < DateTime.Today.AddMonths(1)) @*check if deadline is soon*@
+                        @if (item.deadline < DateTime.Today.AddDays(2)) @*check if deadline is soon*@
                         {
                             <td style="background-color:red">@item.deadline</td>
                         }
