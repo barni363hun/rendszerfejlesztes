@@ -1,3 +1,6 @@
+- JWT with [this video](https://youtu.be/mgeuh8k3I4g?si=_PqSYjcrChh0Ik7z)
+- install JwtBearer nuget package
+
 - made endpoints
 - started making test data
   - **the index starts from 1 not 0 in sqlite**

@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 using System.Text.Json;
 using ClassLibrary.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace WebAPI.Controllers
@@ -20,6 +21,7 @@ namespace WebAPI.Controllers
             this._context = context;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<List<ClassLibrary.Model.Task>>> GetAllTasks()
         {
