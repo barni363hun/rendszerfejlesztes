@@ -12,8 +12,8 @@
 <PageTitle>Login</PageTitle>
 
 <div>
-    <EditForm Model="@model" OnInvalidSubmit="Authenticate" FormName="LoginForm">
-        <DataAnnotationsValidator />
+    <EditForm Model="@model" OnValidSubmit="Authenticate" FormName="LoginForm">
+        @* <DataAnnotationsValidator /> *@
         <div>
             <h3>Login</h3>
         </div>
