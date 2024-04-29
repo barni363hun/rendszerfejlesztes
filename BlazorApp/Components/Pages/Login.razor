@@ -13,7 +13,7 @@
 
 <div>
     <EditForm Model="@model" OnValidSubmit="Authenticate" FormName="LoginForm">
-        @* <DataAnnotationsValidator /> *@
+        <DataAnnotationsValidator />
         <div>
             <h3>Login</h3>
         </div>
@@ -85,6 +85,7 @@
         List<Claim> claims = new List<Claim>
         {
             new Claim(ClaimTypes.Name, manager.name),
+            new Claim("Id", manager.id.ToString()),
             new Claim(ClaimTypes.Role, "Manager") //itt kell majd megadni milyen role-okat kap az authorizációhoz
         };
 
