@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
-namespace FoodOrder.Core.WebSocket
+namespace ClassLibrary.WebSocket
 {
     public static class Extensions
     {
