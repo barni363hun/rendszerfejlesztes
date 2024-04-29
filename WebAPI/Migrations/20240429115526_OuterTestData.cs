@@ -13,39 +13,39 @@ namespace WebAPI.Migrations
             // Add test data for Managers table
             migrationBuilder.InsertData(
                 table: "Managers",
-                columns: new[] { "Name", "Email", "Password" },
+                columns: new[] { "name", "email", "password" },
                 values: new object[] { "Frits", "frits@example.com", "asd" });
             migrationBuilder.InsertData(
                 table: "Managers",
-                columns: new[] { "Name", "Email", "Password" },
+                columns: new[] { "name", "email", "password" },
                 values: new object[] { "Horváth", "horvath@example.com", "asdasd" });
 
 
             // Add test data for Developers table
             migrationBuilder.InsertData(
                 table: "Developers",
-                columns: new[] { "Name", "Email" },
+                columns: new[] { "name", "email" },
                 values: new object[] { "Barni", "barni@example.com" });
             migrationBuilder.InsertData(
                 table: "Developers",
-                columns: new[] { "Name", "Email" },
+                columns: new[] { "name", "email" },
                 values: new object[] { "Szabi", "szabi@example.com" });
             migrationBuilder.InsertData(
                 table: "Developers",
-                columns: new[] { "Name", "Email" },
+                columns: new[] { "name", "email" },
                 values: new object[] { "Ábel", "abel@example.com" });
 
 
 
             // Add test data for Project_Types table
             migrationBuilder.InsertData(
-                table: "Project_Types",
-                columns: new[] { "Name" },
+                table: "ProjectTypes",
+                columns: new[] { "name" },
                 values: new object[] { "Backend" });
 
             migrationBuilder.InsertData(
-                table: "Project_Types",
-                columns: new[] { "Name" },
+                table: "ProjectTypes",
+                columns: new[] { "name" },
                 values: new object[] { "Frontend" });
         }
 
@@ -55,36 +55,36 @@ namespace WebAPI.Migrations
             // Remove test data from Managers table
             migrationBuilder.DeleteData(
                 table: "Managers",
-                keyColumn: "Name",
+                keyColumn: "name",
                 keyValue: "Frits");
             migrationBuilder.DeleteData(
                 table: "Managers",
-                keyColumn: "Name",
+                keyColumn: "name",
                 keyValue: "Horváth");
 
             // Remove test data from Developers table
             migrationBuilder.DeleteData(
                 table: "Developers",
-                keyColumn: "Name",
+                keyColumn: "name",
                 keyValue: "Barni");
             migrationBuilder.DeleteData(
                 table: "Developers",
-                keyColumn: "Name",
+                keyColumn: "name",
                 keyValue: "Szabi");
             migrationBuilder.DeleteData(
                 table: "Developers",
-                keyColumn: "Name",
+                keyColumn: "name",
                 keyValue: "Ábel");
 
 
             // Remove test data from Project_Types table
             migrationBuilder.DeleteData(
-                table: "Project_Types",
-                keyColumn: "Name",
+                table: "ProjectTypes",
+                keyColumn: "name",
                 keyValue: "Frontend");
             migrationBuilder.DeleteData(
-                table: "Project_Types",
-                keyColumn: "Name",
+                table: "ProjectTypes",
+                keyColumn: "name",
                 keyValue: "Backend");
         }
     }

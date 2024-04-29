@@ -14,11 +14,11 @@ namespace WebAPI.Migrations
             // Add example data for Tasks table
             migrationBuilder.InsertData(
                 table: "Tasks",
-                columns: new[] { "Name", "Description", "ProjectId", "ManagerId", "Deadline" },
+                columns: new[] { "name", "description", "projectId", "managerId", "deadline" },
                 values: new object[] { "Task 1", "Make backend", 1, 1, new DateTime(2024, 4, 10) });
             migrationBuilder.InsertData(
                 table: "Tasks",
-                columns: new[] { "Name", "Description", "ProjectId", "ManagerId", "Deadline" },
+                columns: new[] { "name", "description", "projectId", "managerId", "deadline" },
                 values: new object[] { "Task 2", "Make frontend", 2, 1, new DateTime(2024, 4, 10) });
         }
 
@@ -28,11 +28,11 @@ namespace WebAPI.Migrations
             // Remove test data from Tasks table
             migrationBuilder.DeleteData(
                 table: "Tasks",
-                keyColumn: "Name",
+                keyColumn: "name",
                 keyValue: "Task 1");
             migrationBuilder.DeleteData(
                 table: "Tasks",
-                keyColumn: "Name",
+                keyColumn: "name",
                 keyValue: "Task 2");
         }
     }

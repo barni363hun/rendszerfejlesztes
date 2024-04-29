@@ -1,3 +1,15 @@
+- auth token:
+  - get token on /token endpoint and manager credentials
+  - with the token you can get and add tasks
+  - if you are the admin you can add managers
+- auth error resolved with example project
+- Ábel renamed the object fields to lowercase -> reworked the migrations
+  - to apply the canges:
+  - package manager console ->
+  - dotnet ef database update 0
+  - dotnet ef database update
+- JWT with [this video](https://youtu.be/mgeuh8k3I4g?si=_PqSYjcrChh0Ik7z)
+- install JwtBearer nuget package
 - made endpoints
 - started making test data
   - **the index starts from 1 not 0 in sqlite**

@@ -14,11 +14,11 @@ namespace WebAPI.Migrations
             // Add example data for Projects table
             migrationBuilder.InsertData(
                 table: "Projects",
-                columns: new[] { "Name", "TypeId", "Description" },
+                columns: new[] { "name", "typeId", "description" },
                 values: new object[] { "WebAPI", 1, "Backend solution" });
             migrationBuilder.InsertData(
                 table: "Projects",
-                columns: new[] { "Name", "TypeId", "Description" },
+                columns: new[] { "name", "typeId", "description" },
                 values: new object[] { "BlazorApp", 2, "Frontend solution" });
         }
 
@@ -27,11 +27,11 @@ namespace WebAPI.Migrations
             // Remove test data from Projects table
             migrationBuilder.DeleteData(
                 table: "Projects",
-                keyColumn: "Name",
+                keyColumn: "name",
                 keyValue: "WebAPI");
             migrationBuilder.DeleteData(
                 table: "Projects",
-                keyColumn: "Name",
+                keyColumn: "name",
                 keyValue: "BlazorApp");
 
         }

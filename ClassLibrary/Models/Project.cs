@@ -11,7 +11,7 @@ namespace ClassLibrary.Models
         public int id { get; set; }
         public string name { get; set; }
         public int typeId { get; set; }
-        [ForeignKey("TypeId")]
+        [ForeignKey("typeId")]
         public ProjectType type { get; set; }
         public List<ClassLibrary.Model.Task> tasks{ get; set; }
         public string description { get; set; }

@@ -15,62 +15,62 @@ namespace WebAPI.Migrations
                 name: "Developers",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                    id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Email = table.Column<string>(type: "TEXT", nullable: false)
+                    name = table.Column<string>(type: "TEXT", nullable: false),
+                    email = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Developers", x => x.Id);
+                    table.PrimaryKey("PK_Developers", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Managers",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                    id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Email = table.Column<string>(type: "TEXT", nullable: false),
-                    Password = table.Column<string>(type: "TEXT", nullable: false)
+                    name = table.Column<string>(type: "TEXT", nullable: false),
+                    email = table.Column<string>(type: "TEXT", nullable: false),
+                    password = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Managers", x => x.Id);
+                    table.PrimaryKey("PK_Managers", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Project_Types",
+                name: "ProjectTypes",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                    id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: false)
+                    name = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Project_Types", x => x.Id);
+                    table.PrimaryKey("PK_ProjectTypes", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Projects",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                    id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    TypeId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Description = table.Column<string>(type: "TEXT", nullable: false)
+                    name = table.Column<string>(type: "TEXT", nullable: false),
+                    typeId = table.Column<int>(type: "INTEGER", nullable: false),
+                    description = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Projects", x => x.Id);
+                    table.PrimaryKey("PK_Projects", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Projects_Project_Types_TypeId",
-                        column: x => x.TypeId,
-                        principalTable: "Project_Types",
-                        principalColumn: "Id",
+                        name: "FK_Projects_ProjectTypes_typeId",
+                        column: x => x.typeId,
+                        principalTable: "ProjectTypes",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -78,23 +78,23 @@ namespace WebAPI.Migrations
                 name: "DeveloperProject",
                 columns: table => new
                 {
-                    DevelopersId = table.Column<int>(type: "INTEGER", nullable: false),
-                    ProjectsId = table.Column<int>(type: "INTEGER", nullable: false)
+                    developersid = table.Column<int>(type: "INTEGER", nullable: false),
+                    projectsid = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DeveloperProject", x => new { x.DevelopersId, x.ProjectsId });
+                    table.PrimaryKey("PK_DeveloperProject", x => new { x.developersid, x.projectsid });
                     table.ForeignKey(
-                        name: "FK_DeveloperProject_Developers_DevelopersId",
-                        column: x => x.DevelopersId,
+                        name: "FK_DeveloperProject_Developers_developersid",
+                        column: x => x.developersid,
                         principalTable: "Developers",
-                        principalColumn: "Id",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_DeveloperProject_Projects_ProjectsId",
-                        column: x => x.ProjectsId,
+                        name: "FK_DeveloperProject_Projects_projectsid",
+                        column: x => x.projectsid,
                         principalTable: "Projects",
-                        principalColumn: "Id",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -102,50 +102,50 @@ namespace WebAPI.Migrations
                 name: "Tasks",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                    id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Description = table.Column<string>(type: "TEXT", nullable: false),
-                    ProjectId = table.Column<int>(type: "INTEGER", nullable: false),
-                    ManagerId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Deadline = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    name = table.Column<string>(type: "TEXT", nullable: false),
+                    description = table.Column<string>(type: "TEXT", nullable: false),
+                    projectId = table.Column<int>(type: "INTEGER", nullable: false),
+                    managerId = table.Column<int>(type: "INTEGER", nullable: false),
+                    deadline = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Tasks", x => x.Id);
+                    table.PrimaryKey("PK_Tasks", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Tasks_Managers_ManagerId",
-                        column: x => x.ManagerId,
+                        name: "FK_Tasks_Managers_managerId",
+                        column: x => x.managerId,
                         principalTable: "Managers",
-                        principalColumn: "Id",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Tasks_Projects_ProjectId",
-                        column: x => x.ProjectId,
+                        name: "FK_Tasks_Projects_projectId",
+                        column: x => x.projectId,
                         principalTable: "Projects",
-                        principalColumn: "Id",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_DeveloperProject_ProjectsId",
+                name: "IX_DeveloperProject_projectsid",
                 table: "DeveloperProject",
-                column: "ProjectsId");
+                column: "projectsid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Projects_TypeId",
+                name: "IX_Projects_typeId",
                 table: "Projects",
-                column: "TypeId");
+                column: "typeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tasks_ManagerId",
+                name: "IX_Tasks_managerId",
                 table: "Tasks",
-                column: "ManagerId");
+                column: "managerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tasks_ProjectId",
+                name: "IX_Tasks_projectId",
                 table: "Tasks",
-                column: "ProjectId");
+                column: "projectId");
         }
 
         /// <inheritdoc />
@@ -167,7 +167,7 @@ namespace WebAPI.Migrations
                 name: "Projects");
 
             migrationBuilder.DropTable(
-                name: "Project_Types");
+                name: "ProjectTypes");
         }
     }
 }
