@@ -1,3 +1,5 @@
+- websocket added based on example project
+  - nemtom működik-e, nemtom hogyan kéne tesztelni de lefordul
 - auth token:
   - get token on /token endpoint and manager credentials
   - with the token you can get and add tasks
