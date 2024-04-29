@@ -3,10 +3,12 @@ using ClassLibrary.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using ClassLibrary.Constants;
 
 namespace WebAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class ManagerController : ControllerBase
     {
@@ -16,24 +18,26 @@ namespace WebAPI.Controllers
             this._context = context;
         }
 
+        [Authorize(Roles = Roles.Admin)]
         [HttpPost]
-        public async Task<ActionResult<Manager>> LoginManager(ManagerLoginDTO loginDTO)
+        public async Task<ActionResult<Manager>> AddManager(ManagerDTO managerDTO)
         {
-            var manager = await _context.Managers.FirstOrDefaultAsync(m => m.email == loginDTO.Email);
-            if (manager == null)
+            var manager = await _context.Managers.FirstOrDefaultAsync(m => m.email == managerDTO.Email || m.name == managerDTO.Name);
+            if (manager != null)
             {
-                return NotFound("User with this email not found.");
+                return NotFound("User with this email or name already exits.");
             }
             else
             {
-                if (manager.password == loginDTO.Password)
+                Manager newManager = new Manager
                 {
-                    return Ok(manager);
-                }
-                else
-                {
-                    return Unauthorized("Wrong password.");
-                }
+                    name = managerDTO.Name,
+                    email = managerDTO.Email,
+                    password = managerDTO.Password,
+                };
+                await _context.Managers.AddAsync(newManager);
+                await _context.SaveChangesAsync();
+                return Ok();
             }
         }
     }

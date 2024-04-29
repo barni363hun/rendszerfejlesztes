@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace WebAPI.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class TaskController : ControllerBase
@@ -21,7 +22,6 @@ namespace WebAPI.Controllers
             this._context = context;
         }
 
-        [Authorize]
         [HttpGet]
         public async Task<ActionResult<List<ClassLibrary.Model.Task>>> GetAllTasks()
         {

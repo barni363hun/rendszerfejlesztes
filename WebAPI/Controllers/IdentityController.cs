@@ -10,6 +10,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
+using ClassLibrary.Constants;
 
 namespace WebAPI.Controllers
 {
@@ -38,12 +39,12 @@ namespace WebAPI.Controllers
             {
                 if (manager.password == loginDTO.Password)
                 {
-                    
+
                     // Define claims
                     var claims = new[]
                     {
                         new Claim(ClaimTypes.NameIdentifier, manager.email),
-                        //new Claim(ClaimTypes.Role, manager.)
+                        new Claim(ClaimTypes.Role, manager.name == "Admin" ? Roles.Admin : Roles.Manager)
                     };
 
                     // Create ClaimsIdentity
@@ -75,12 +76,5 @@ namespace WebAPI.Controllers
             }
 
         }
-
-        //[Authorize]
-        //[HttpPost("tokendata")]
-        //public IActionResult TokenData()
-        //{
-
-        //}
     }
 }
