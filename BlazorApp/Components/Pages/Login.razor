@@ -1,4 +1,5 @@
 ﻿@page "/login"
+@using ClassLibrary.DTOs
 @using ClassLibrary.Models
 @inject ILogger<Projects> Logger
 @using Microsoft.AspNetCore.Authentication
@@ -17,7 +18,7 @@
             <h3>Login</h3>
         </div>
         <div>
-            <label>User Name</label>
+            <label>Email</label>
             <InputText @bind-Value="model.Email" placeholder="Email" />
             <ValidationMessage For="() => model.Email" />
         </div>
@@ -39,7 +40,7 @@
     public HttpContext? httpContext{ get; set; }
 
     [SupplyParameterFromForm]
-    public LoginViewModel model { get; set; } = new();
+    public ManagerLoginDTO model { get; set; } = new();
 
     private string? errorMessage;
 
@@ -84,7 +85,7 @@
         List<Claim> claims = new List<Claim>
         {
             new Claim(ClaimTypes.Name, manager.name),
-            new Claim(ClaimTypes.Role, "manager") //itt kell majd megadni milyen role-okat kap az authorizációhoz
+            new Claim(ClaimTypes.Role, "Manager") //itt kell majd megadni milyen role-okat kap az authorizációhoz
         };
 
         var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
