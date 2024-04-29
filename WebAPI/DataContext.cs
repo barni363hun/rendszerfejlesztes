@@ -13,7 +13,7 @@ namespace WebAPI
         
         //sqlite
         public DbSet<ClassLibrary.Model.Task> Tasks => Set<ClassLibrary.Model.Task>();
-        public DbSet<ProjectType> Project_Types => Set<ProjectType>();
+        public DbSet<ProjectType> ProjectTypes => Set<ProjectType>();
         public DbSet<Project> Projects => Set<Project>();
         public DbSet<Manager> Managers => Set<Manager>();
         public DbSet<Developer> Developers => Set<Developer>();

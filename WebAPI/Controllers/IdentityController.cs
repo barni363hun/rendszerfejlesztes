@@ -9,6 +9,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebAPI.Controllers
 {
@@ -41,8 +42,8 @@ namespace WebAPI.Controllers
                     // Define claims
                     var claims = new[]
                     {
-                        new Claim(ClaimTypes.NameIdentifier, manager.email), // Example claim
-                        // Add more claims as needed
+                        new Claim(ClaimTypes.NameIdentifier, manager.email),
+                        //new Claim(ClaimTypes.Role, manager.)
                     };
 
                     // Create ClaimsIdentity
@@ -74,5 +75,12 @@ namespace WebAPI.Controllers
             }
 
         }
+
+        //[Authorize]
+        //[HttpPost("tokendata")]
+        //public IActionResult TokenData()
+        //{
+
+        //}
     }
 }
