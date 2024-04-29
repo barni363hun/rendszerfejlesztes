@@ -3,7 +3,7 @@
   - with the token you can get and add tasks
   - if you are the admin you can add managers
 - auth error resolved with example project
-- Ábel renamed the field to lowercase -> reworked the migrations
+- Ábel renamed the object fields to lowercase -> reworked the migrations
   - to apply the canges:
   - package manager console ->
   - dotnet ef database update 0
