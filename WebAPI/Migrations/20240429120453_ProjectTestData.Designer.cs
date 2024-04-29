@@ -11,7 +11,7 @@ using WebAPI;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240409095359_ProjectTestData")]
+    [Migration("20240429120453_ProjectTestData")]
     partial class ProjectTestData
     {
         /// <inheritdoc />
@@ -22,190 +22,190 @@ namespace WebAPI.Migrations
 
             modelBuilder.Entity("ClassLibrary.Model.Task", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("Deadline")
+                    b.Property<DateTime>("deadline")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Description")
+                    b.Property<string>("description")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("ManagerId")
+                    b.Property<int>("managerId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("name")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("ProjectId")
+                    b.Property<int>("projectId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("Id");
+                    b.HasKey("id");
 
-                    b.HasIndex("ManagerId");
+                    b.HasIndex("managerId");
 
-                    b.HasIndex("ProjectId");
+                    b.HasIndex("projectId");
 
                     b.ToTable("Tasks");
                 });
 
             modelBuilder.Entity("ClassLibrary.Models.Developer", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Email")
+                    b.Property<string>("email")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("name")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id");
+                    b.HasKey("id");
 
                     b.ToTable("Developers");
                 });
 
             modelBuilder.Entity("ClassLibrary.Models.Manager", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Email")
+                    b.Property<string>("email")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("name")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Password")
+                    b.Property<string>("password")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id");
+                    b.HasKey("id");
 
                     b.ToTable("Managers");
                 });
 
             modelBuilder.Entity("ClassLibrary.Models.Project", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Description")
+                    b.Property<string>("description")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("name")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("TypeId")
+                    b.Property<int>("typeId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("Id");
+                    b.HasKey("id");
 
-                    b.HasIndex("TypeId");
+                    b.HasIndex("typeId");
 
                     b.ToTable("Projects");
                 });
 
-            modelBuilder.Entity("ClassLibrary.Models.Project_Type", b =>
+            modelBuilder.Entity("ClassLibrary.Models.ProjectType", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("name")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id");
+                    b.HasKey("id");
 
-                    b.ToTable("Project_Types");
+                    b.ToTable("ProjectTypes");
                 });
 
             modelBuilder.Entity("DeveloperProject", b =>
                 {
-                    b.Property<int>("DevelopersId")
+                    b.Property<int>("developersid")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("ProjectsId")
+                    b.Property<int>("projectsid")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("DevelopersId", "ProjectsId");
+                    b.HasKey("developersid", "projectsid");
 
-                    b.HasIndex("ProjectsId");
+                    b.HasIndex("projectsid");
 
                     b.ToTable("DeveloperProject");
                 });
 
             modelBuilder.Entity("ClassLibrary.Model.Task", b =>
                 {
-                    b.HasOne("ClassLibrary.Models.Manager", "Manager")
-                        .WithMany("Tasks")
-                        .HasForeignKey("ManagerId")
+                    b.HasOne("ClassLibrary.Models.Manager", "manager")
+                        .WithMany("tasks")
+                        .HasForeignKey("managerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ClassLibrary.Models.Project", "Project")
-                        .WithMany("Tasks")
-                        .HasForeignKey("ProjectId")
+                    b.HasOne("ClassLibrary.Models.Project", "project")
+                        .WithMany("tasks")
+                        .HasForeignKey("projectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Manager");
+                    b.Navigation("manager");
 
-                    b.Navigation("Project");
+                    b.Navigation("project");
                 });
 
             modelBuilder.Entity("ClassLibrary.Models.Project", b =>
                 {
-                    b.HasOne("ClassLibrary.Models.Project_Type", "Type")
-                        .WithMany("Projects")
-                        .HasForeignKey("TypeId")
+                    b.HasOne("ClassLibrary.Models.ProjectType", "type")
+                        .WithMany("projects")
+                        .HasForeignKey("typeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Type");
+                    b.Navigation("type");
                 });
 
             modelBuilder.Entity("DeveloperProject", b =>
                 {
                     b.HasOne("ClassLibrary.Models.Developer", null)
                         .WithMany()
-                        .HasForeignKey("DevelopersId")
+                        .HasForeignKey("developersid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("ClassLibrary.Models.Project", null)
                         .WithMany()
-                        .HasForeignKey("ProjectsId")
+                        .HasForeignKey("projectsid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
             modelBuilder.Entity("ClassLibrary.Models.Manager", b =>
                 {
-                    b.Navigation("Tasks");
+                    b.Navigation("tasks");
                 });
 
             modelBuilder.Entity("ClassLibrary.Models.Project", b =>
                 {
-                    b.Navigation("Tasks");
+                    b.Navigation("tasks");
                 });
 
-            modelBuilder.Entity("ClassLibrary.Models.Project_Type", b =>
+            modelBuilder.Entity("ClassLibrary.Models.ProjectType", b =>
                 {
-                    b.Navigation("Projects");
+                    b.Navigation("projects");
                 });
 #pragma warning restore 612, 618
         }

@@ -12,7 +12,7 @@ namespace WebAPI.Migrations
         {
             migrationBuilder.InsertData(
                 table: "Managers",
-                columns: new[] { "Name", "Email", "Password" },
+                columns: new[] { "name", "email", "password" },
                 values: new object[] { "Admin", "admin@example.com", "admin" });
 
         }
@@ -22,7 +22,7 @@ namespace WebAPI.Migrations
         {
             migrationBuilder.DeleteData(
                 table: "Managers",
-                keyColumn: "Name",
+                keyColumn: "name",
                 keyValue: "Admin");
 
         }

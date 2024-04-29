@@ -23,12 +23,6 @@ namespace WebAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("ManagerId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("ProjectId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<DateTime>("deadline")
                         .HasColumnType("TEXT");
 
@@ -48,9 +42,9 @@ namespace WebAPI.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("ManagerId");
+                    b.HasIndex("managerId");
 
-                    b.HasIndex("ProjectId");
+                    b.HasIndex("projectId");
 
                     b.ToTable("Tasks");
                 });
@@ -103,9 +97,6 @@ namespace WebAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("TypeId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("description")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -119,7 +110,7 @@ namespace WebAPI.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("TypeId");
+                    b.HasIndex("typeId");
 
                     b.ToTable("Projects");
                 });
@@ -158,13 +149,13 @@ namespace WebAPI.Migrations
                 {
                     b.HasOne("ClassLibrary.Models.Manager", "manager")
                         .WithMany("tasks")
-                        .HasForeignKey("ManagerId")
+                        .HasForeignKey("managerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("ClassLibrary.Models.Project", "project")
                         .WithMany("tasks")
-                        .HasForeignKey("ProjectId")
+                        .HasForeignKey("projectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -177,7 +168,7 @@ namespace WebAPI.Migrations
                 {
                     b.HasOne("ClassLibrary.Models.ProjectType", "type")
                         .WithMany("projects")
-                        .HasForeignKey("TypeId")
+                        .HasForeignKey("typeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
