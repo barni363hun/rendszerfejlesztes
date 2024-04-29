@@ -64,13 +64,10 @@ else
     {
         {
             var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-
             // Access the ClaimsPrincipal representing the authenticated user
             var user = authState.User;
-
             // Find the claim with the specific type ("Id")
             var managerIdClaim = user.FindFirst("Id");
-
             if (managerIdClaim != null)
             {
                 // Extract the value of the claim
