@@ -2,6 +2,7 @@
 using ClassLibrary.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
@@ -14,14 +15,13 @@ namespace WebAPI.Controllers
     [ApiController]
     public class IdentityController : ControllerBase
     {
-        private readonly SymmetricSecurityKey _securityKey;
 
         private readonly DataContext _context;
-        public IdentityController(DataContext context)
+        private readonly IConfiguration _configuration;
+        public IdentityController(DataContext context, IConfiguration configuration)
         {
-            var passphrase = "nagyontitkuskulcs";
-            _securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(passphrase));
             this._context = context;
+            _configuration = configuration;
         }
 
         [HttpPost("token")]
@@ -48,12 +48,14 @@ namespace WebAPI.Controllers
                     // Create ClaimsIdentity
                     var claimsIdentity = new ClaimsIdentity(claims, "Token");
 
+                    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("Token").Value ?? throw new Exception("Token kulcs nincs megadva")));
+
                     // Create token descriptor
                     var tokenDescriptor = new SecurityTokenDescriptor
                     {
                         Subject = claimsIdentity,
                         Expires = DateTime.UtcNow.AddHours(24), // Token expiration time
-                        SigningCredentials = new SigningCredentials(_securityKey,SecurityAlgorithms.Sha256)
+                        SigningCredentials = new SigningCredentials(key,SecurityAlgorithms.HmacSha512Signature)
                     };
 
                     // Create token

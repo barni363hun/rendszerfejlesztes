@@ -16,7 +16,7 @@ builder.Services.AddAuthentication().AddJwtBearer(x =>
         ValidateAudience = false,
         ValidateLifetime = false,
         ValidateIssuerSigningKey = false,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("nagyontitkuskulcs"))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("Token").Value))
     };
 });
 
