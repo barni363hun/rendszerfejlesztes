@@ -1,0 +1,21 @@
+﻿@page "/access-denied"
+@using Microsoft.AspNetCore.Authentication
+@inject NavigationManager NavigationManager
+
+You have been successfuly logged out.
+
+@code
+{
+    [CascadingParameter]
+    public HttpContext httpContext { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        if (httpContext.User.Identity.IsAuthenticated)
+        {
+            await httpContext.SignOutAsync();
+            NavigationManager.NavigateTo("/logout", true);
+        }
+    }
+}
