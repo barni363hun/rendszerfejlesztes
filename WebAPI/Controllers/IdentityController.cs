@@ -43,6 +43,7 @@ namespace WebAPI.Controllers
                     // Define claims
                     var claims = new[]
                     {
+                        new Claim("Id", manager.id.ToString()),
                         new Claim(ClaimTypes.NameIdentifier, manager.email),
                         new Claim(ClaimTypes.Role, manager.name == "Admin" ? Roles.Admin : Roles.Manager)
                     };
