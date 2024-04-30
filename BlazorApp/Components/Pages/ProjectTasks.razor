@@ -1,5 +1,6 @@
 ﻿@page "/projects/{projectId}/tasks"
 @using ClassLibrary.Models
+@using Microsoft.AspNetCore.Authorization
 @using Newtonsoft.Json
 @using System.Text
 @inject ILogger<Projects> Logger
@@ -7,6 +8,7 @@
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@attribute [Authorize(Roles = "Administrator, Manager")]
 
 
 <PageTitle>Tasks for project @projectId</PageTitle>

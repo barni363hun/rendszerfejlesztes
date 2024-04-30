@@ -1,11 +1,13 @@
 ﻿@page "/mytasks"
 @using ClassLibrary.Models
+@using Microsoft.AspNetCore.Authorization
 @using Newtonsoft.Json
 @using System.Text
 @inject ILogger<Projects> Logger
 @attribute [StreamRendering]
 @rendermode InteractiveServer
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@attribute [Authorize(Roles = "Administrator, Manager")]
 
 
 <PageTitle>My Tasks</PageTitle>
