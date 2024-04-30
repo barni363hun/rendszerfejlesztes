@@ -46,6 +46,11 @@ internal class Program
             app.UseSwaggerUI();
         }
 
+        app.UseCors(x => x
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader());
+
         app.UseWebSockets();
         var serviceScopeFactory = app.Services.GetRequiredService<IServiceScopeFactory>();
         var serviceProvider = serviceScopeFactory.CreateScope().ServiceProvider;
