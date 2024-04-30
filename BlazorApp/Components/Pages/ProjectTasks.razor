@@ -1,11 +1,14 @@
 ﻿@page "/projects/{projectId}/tasks"
 @using ClassLibrary.Models
+@using Microsoft.AspNetCore.Authorization
 @using Newtonsoft.Json
 @using System.Text
 @inject ILogger<Projects> Logger
 @attribute [StreamRendering]
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@attribute [Authorize(Roles = "Administrator, Manager")]
 
 
 <PageTitle>Tasks for project @projectId</PageTitle>
@@ -58,6 +61,7 @@ else
 
     private List<ClassLibrary.Model.Task>? tasks;
 
+    private int managerId;
     private string newTaskName;
     private string newTaskDescription;
     private DateTime newTaskDeadline = DateTime.Today.AddMonths(2); // Set default date to two months from current date
@@ -89,13 +93,33 @@ else
 
     private async void AddTask()
     {
+        {
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            // Access the ClaimsPrincipal representing the authenticated user
+            var user = authState.User;
+            // Find the claim with the specific type ("Id")
+            var managerIdClaim = user.FindFirst("Id");
+            if (managerIdClaim != null)
+            {
+                // Extract the value of the claim
+                managerId = Convert.ToInt32(managerIdClaim.Value);
+            }
+            else
+            {
+                // ManagerId claim not found
+                Logger.LogWarning("Id was null");
+                managerId = -1;
+            }
+            Logger.LogWarning("User id:" + managerId);
+        }
+
         ClassLibrary.Model.Task newTask = new ClassLibrary.Model.Task
         {
             name = newTaskName,
             description = newTaskDescription,
             deadline = newTaskDeadline,
             projectId = Convert.ToInt32(this.projectId),
-            managerId = 1,
+            managerId = managerId,
             id = tasks.Last().id + 1
         };
         try

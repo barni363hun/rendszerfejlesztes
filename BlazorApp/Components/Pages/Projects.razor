@@ -1,12 +1,14 @@
-﻿@page "/"
+﻿@page "/Projects"
 @using ClassLibrary.Models
+@using Microsoft.AspNetCore.Authorization
 @using Newtonsoft.Json
 @inject ILogger<Projects> Logger
 @* @attribute [StreamRendering] *@
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
+@attribute [Authorize(Roles = "Administrator, Manager")]
 
-<PageTitle>Project</PageTitle>
+<PageTitle>Projects</PageTitle>
 
 <h1>Projects</h1>
 Project Type:

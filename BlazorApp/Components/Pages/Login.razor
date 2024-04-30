@@ -1,0 +1,98 @@
+﻿@page "/login"
+@using ClassLibrary.DTOs
+@using ClassLibrary.Models
+@inject ILogger<Projects> Logger
+@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Authentication.Cookies
+@using Newtonsoft.Json
+@using System.Text
+@using System.Security.Claims
+@inject NavigationManager NavigationManager
+
+<PageTitle>Login</PageTitle>
+
+<div>
+    <EditForm Model="@model" OnValidSubmit="Authenticate" FormName="LoginForm">
+        <DataAnnotationsValidator />
+        <div>
+            <h3>Login</h3>
+        </div>
+        <div>
+            <label>Email</label>
+            <InputText @bind-Value="model.Email" placeholder="Email" />
+            <ValidationMessage For="() => model.Email" />
+        </div>
+        <div>
+            <label>Password</label>
+            <InputText @bind-Value="model.Password" placeholder="Password" type="password"/>
+            <ValidationMessage For="() => model.Password" />
+        </div>
+        <div>
+            <span>@errorMessage</span>
+        </div>
+        <div>
+            <button type="submit">Login</button>
+        </div>
+    </EditForm>
+</div>
+@code {
+    [CascadingParameter]
+    public HttpContext? httpContext{ get; set; }
+
+    [SupplyParameterFromForm]
+    public ManagerLoginDTO model { get; set; } = new();
+
+    private string? errorMessage;
+
+    public Manager? manager { get; set; }
+
+    private async Task Authenticate()
+    {
+        Logger.LogWarning("Button pushed");
+        var settings = new JsonSerializerSettings();
+        try
+        {
+            HttpClient httpClient = new HttpClient();
+            string json = JsonConvert.SerializeObject(model);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await httpClient.PostAsync("http://localhost:5005/token", content);
+            Logger.LogWarning(json);
+            var result = await response.Content.ReadAsStringAsync();
+            if (response.IsSuccessStatusCode)
+            {
+                Logger.LogWarning("Succesful login!");
+                manager = JsonConvert.DeserializeObject<Manager>(result, settings);
+                if (manager == null)
+                {
+                    Logger.LogWarning("didn't get manager");
+                }
+            }
+            else
+            {
+                Logger.LogWarning("Unsuccesful api request!");
+                Logger.LogWarning(response.StatusCode.ToString());
+                //json = await response.Content.ReadAsStringAsync();
+                Logger.LogWarning(json);
+                return;
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogWarning(ex.Message);
+            return;
+        }
+
+        List<Claim> claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Name, manager.name),
+            new Claim("Id", manager.id.ToString()),
+            new Claim(ClaimTypes.Role, "Manager") //itt kell majd megadni milyen role-okat kap az authorizációhoz
+        };
+
+        var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+        var principal = new ClaimsPrincipal(identity);
+        await httpContext.SignInAsync(principal);
+
+        NavigationManager.NavigateTo("/");
+    }
+}

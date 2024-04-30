@@ -1,10 +1,13 @@
 ﻿@page "/mytasks"
 @using ClassLibrary.Models
+@using Microsoft.AspNetCore.Authorization
 @using Newtonsoft.Json
 @using System.Text
 @inject ILogger<Projects> Logger
 @attribute [StreamRendering]
 @rendermode InteractiveServer
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@attribute [Authorize(Roles = "Administrator, Manager")]
 
 
 <PageTitle>My Tasks</PageTitle>
@@ -53,12 +56,34 @@ else
 }
 
 @code {
+
+
     private List<ClassLibrary.Model.Task>? tasks;
 
-    int managerId = 1; //later change it to whoever is logged in
+    int managerId = -1; //later change it to whoever is logged in
 
     protected override async Task OnInitializedAsync()
     {
+        {
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            // Access the ClaimsPrincipal representing the authenticated user
+            var user = authState.User;
+            // Find the claim with the specific type ("Id")
+            var managerIdClaim = user.FindFirst("Id");
+            if (managerIdClaim != null)
+            {
+                // Extract the value of the claim
+                managerId = Convert.ToInt32(managerIdClaim.Value);
+            }
+            else
+            {
+                // ManagerId claim not found
+                Logger.LogWarning("Id was null");
+                managerId = -1;
+            }
+            Logger.LogWarning("User id:" + managerId);
+        }
+
         var settings = new JsonSerializerSettings();
         try
         {

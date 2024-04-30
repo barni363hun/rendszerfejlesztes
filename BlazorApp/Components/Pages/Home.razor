@@ -1,0 +1,20 @@
+﻿@page "/"
+
+<PageTitle>Home</PageTitle>
+
+<div>
+    <h2>Welcome to the Readmine App!</h2>
+</div>
+<div>
+    <AuthorizeView>
+        <NotAuthorized>
+           <span>You are not logged in. Please <a href="/login" >click here</a> to log in</span>
+        </NotAuthorized>
+        <Authorized>
+            <span>You are logged in as <b>@context.User.Identity.Name</b>. <a href="/logout">Click here</a> if you want to log out.</span>
+        </Authorized>
+    </AuthorizeView>
+</div>
+
+
+
