@@ -44,7 +44,8 @@ namespace WebAPI.Controllers
                     var claims = new[]
                     {
                         new Claim("Id", manager.id.ToString()),
-                        new Claim(ClaimTypes.NameIdentifier, manager.email),
+                        new Claim(ClaimTypes.Name, manager.name),
+                        new Claim(ClaimTypes.Email, manager.email),
                         new Claim(ClaimTypes.Role, manager.name == "Admin" ? Roles.Admin : Roles.Manager)
                     };
 
