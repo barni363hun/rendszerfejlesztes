@@ -75,7 +75,11 @@ else
         {
             HttpClient httpClient = new HttpClient();
 
-            string authToken = httpContext.Request.Cookies["token"];
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            // Access the ClaimsPrincipal representing the authenticated user
+            var user = authState.User;
+
+            string authToken = user.FindFirst("authToken").Value;
             httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
 
             HttpResponseMessage response = await httpClient.GetAsync("http://localhost:5005/Task");

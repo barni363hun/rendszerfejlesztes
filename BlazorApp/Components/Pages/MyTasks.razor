@@ -66,33 +66,33 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        // Access the ClaimsPrincipal representing the authenticated user
+        var user = authState.User;
+        // Find the claim with the specific type ("Id")
+        var managerIdClaim = user.FindFirst("Id");
+        if (managerIdClaim != null)
         {
-            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-            // Access the ClaimsPrincipal representing the authenticated user
-            var user = authState.User;
-            // Find the claim with the specific type ("Id")
-            var managerIdClaim = user.FindFirst("Id");
-            if (managerIdClaim != null)
-            {
-                // Extract the value of the claim
-                managerId = Convert.ToInt32(managerIdClaim.Value);
-            }
-            else
-            {
-                // ManagerId claim not found
-                Logger.LogWarning("Id was null");
-                managerId = -1;
-            }
-            Logger.LogWarning("User id:" + managerId);
+            // Extract the value of the claim
+            managerId = Convert.ToInt32(managerIdClaim.Value);
         }
+        else
+        {
+            // ManagerId claim not found
+            Logger.LogWarning("Id was null");
+            managerId = -1;
+        }
+        Logger.LogWarning("User id:" + managerId);
+
 
         var settings = new JsonSerializerSettings();
         try
         {
             HttpClient httpClient = new HttpClient();
 
-            string authToken = httpContext.Request.Cookies["token"];
-            
+            string authToken = user.FindFirst("AuthToken").Value;
+
             httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
             
             HttpResponseMessage response = await httpClient.GetAsync("http://localhost:5005/Task");

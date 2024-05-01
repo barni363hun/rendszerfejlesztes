@@ -92,15 +92,17 @@
             return;
         }
 
-        httpContext.Response.Cookies.Append("token", tokenString, new CookieOptions
-        {
-            Path = "/",
-            Expires = DateTimeOffset.UtcNow.AddHours(24) // Set expiration time as needed
-        });
+        // httpContext.Response.Cookies.Append("token", tokenString, new CookieOptions
+        // {
+        //     Path = "/",
+        //     Expires = DateTimeOffset.UtcNow.AddHours(24) // Set expiration time as needed
+        // });
 
         var handler = new JwtSecurityTokenHandler();
         var tokenClaims = handler.ReadJwtToken(tokenString) as JwtSecurityToken;
         List<Claim> claims = tokenClaims.Claims.ToList();
+        claims.Add(new Claim("authToken", tokenString));
+
 
         for (int i = 0; i < claims.Count; i++)
         {
