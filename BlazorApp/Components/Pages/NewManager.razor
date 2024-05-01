@@ -6,6 +6,7 @@
 @using Newtonsoft.Json
 @using System.Text
 @attribute [Authorize(Roles = "Admin")]
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery antiforgery
 
 <div>
     <EditForm Model="@manager" OnValidSubmit="Create" FormName="ManagerForm">
@@ -25,12 +26,16 @@
         <div>
             <button type="submit">Create</button>
         </div>
+        <div>
+            <span>@messeage</span>
+        </div>
     </EditForm>
 </div>
 
 @code {
     [SupplyParameterFromForm]
     public ManagerDTO manager { get; set; } = new();
+    private string? messeage { get; set; }
 
     private async Task Create()
     {
@@ -51,7 +56,7 @@
             HttpResponseMessage response = await httpClient.PostAsync("http://localhost:5005/manager", content);
             Logger.LogWarning(json);
             var result = await response.Content.ReadAsStringAsync();
-            
+
             if (response.IsSuccessStatusCode)
             {
                 Logger.LogWarning("API successful");
@@ -70,5 +75,7 @@
             Logger.LogWarning(ex.Message);
             return;
         }
+        messeage = "Manager Saved!";
+        manager = new ManagerDTO();
     }
 }
