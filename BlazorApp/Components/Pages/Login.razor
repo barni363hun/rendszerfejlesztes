@@ -70,7 +70,7 @@
 
                 TokenResponse temp = JsonConvert.DeserializeObject<TokenResponse>(result, settings);
                 tokenString = temp.Token;
-                
+
                 if (tokenString == null)
                 {
                     Logger.LogWarning("didn't get the token");
@@ -93,9 +93,10 @@
         }
 
         var handler = new JwtSecurityTokenHandler();
-        var tokenClaims = handler.ReadJwtToken(tokenString).Claims;
+        var tokenClaims = handler.ReadJwtToken(tokenString) as JwtSecurityToken;
+        Claim[] claims = tokenClaims.Claims.ToArray();
 
-        var claimsIdentity = new ClaimsIdentity(tokenClaims, "jwt");
+        var claimsIdentity = new ClaimsIdentity(claims, "jwt");
         var user = new ClaimsPrincipal(claimsIdentity);
 
         var principal = new ClaimsPrincipal(user);
