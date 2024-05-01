@@ -4,10 +4,10 @@
 @using Newtonsoft.Json
 @using System.Text
 @inject ILogger<Projects> Logger
-@attribute [StreamRendering]
 @rendermode InteractiveServer
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @attribute [Authorize(Roles = "Admin, Manager")]
+@attribute [StreamRendering]
 
 
 <PageTitle>My Tasks</PageTitle>
@@ -56,6 +56,8 @@ else
 }
 
 @code {
+    [CascadingParameter]
+    public HttpContext? httpContext { get; set; }
 
 
     private List<ClassLibrary.Model.Task>? tasks;
@@ -88,13 +90,18 @@ else
         try
         {
             HttpClient httpClient = new HttpClient();
+
+            string authToken = httpContext.Request.Cookies["token"];
+            
+            httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
+            
             HttpResponseMessage response = await httpClient.GetAsync("http://localhost:5005/Task");
-            var result = await response.Content.ReadAsStringAsync();
+            string result = await response.Content.ReadAsStringAsync();
             //Logger.LogWarning(result);
             if (response.IsSuccessStatusCode)
             {
-                tasks = JsonConvert.DeserializeObject<List<ClassLibrary.Model.Task>>(result, settings);
                 Logger.LogWarning("Succesful api fetch!");
+                tasks = JsonConvert.DeserializeObject<List<ClassLibrary.Model.Task>>(result, settings);
             }
             else
             {

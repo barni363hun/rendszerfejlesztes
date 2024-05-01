@@ -62,7 +62,7 @@ else
         try
         {
             HttpClient httpClient = new HttpClient();
-            HttpResponseMessage response = await httpClient.GetAsync("http://localhost:5005/api/Project");
+            HttpResponseMessage response = await httpClient.GetAsync("http://localhost:5005/Project");
             var result = await response.Content.ReadAsStringAsync();
             //Logger.LogWarning(result);
             if (response.IsSuccessStatusCode)
