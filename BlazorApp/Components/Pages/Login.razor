@@ -8,6 +8,8 @@
 @using System.Text
 @using System.Security.Claims
 @inject NavigationManager NavigationManager
+@using Microsoft.IdentityModel.Tokens;
+@using System.IdentityModel.Tokens.Jwt
 
 <PageTitle>Login</PageTitle>
 
@@ -44,7 +46,12 @@
 
     private string? errorMessage;
 
-    public Manager? manager { get; set; }
+    private string? tokenString;
+
+    public class TokenResponse
+    {
+        public string? Token { get; set; }
+    }
 
     private async Task Authenticate()
     {
@@ -60,11 +67,14 @@
             var result = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
-                Logger.LogWarning("Succesful login!");
-                manager = JsonConvert.DeserializeObject<Manager>(result, settings);
-                if (manager == null)
+
+                TokenResponse temp = JsonConvert.DeserializeObject<TokenResponse>(result, settings);
+                tokenString = temp.Token;
+                
+                if (tokenString == null)
                 {
-                    Logger.LogWarning("didn't get manager");
+                    Logger.LogWarning("didn't get the token");
+                    return;
                 }
             }
             else
@@ -82,17 +92,17 @@
             return;
         }
 
-        List<Claim> claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.Name, manager.name),
-            new Claim("Id", manager.id.ToString()),
-            new Claim(ClaimTypes.Role, "Manager") //itt kell majd megadni milyen role-okat kap az authorizációhoz
-        };
+        var handler = new JwtSecurityTokenHandler();
+        var tokenClaims = handler.ReadJwtToken(tokenString).Claims;
 
-        var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-        var principal = new ClaimsPrincipal(identity);
+        var claimsIdentity = new ClaimsIdentity(tokenClaims, "jwt");
+        var user = new ClaimsPrincipal(claimsIdentity);
+
+        var principal = new ClaimsPrincipal(user);
         await httpContext.SignInAsync(principal);
 
+
+        Logger.LogWarning("Succesful login!");
         NavigationManager.NavigateTo("/");
     }
 }

@@ -11,7 +11,6 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     {
         options.Cookie.Name = "auth_token";
         options.LoginPath = "/login";
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(10);
         options.AccessDeniedPath = "/access-denied";
     });
 builder.Services.AddAuthorization();
