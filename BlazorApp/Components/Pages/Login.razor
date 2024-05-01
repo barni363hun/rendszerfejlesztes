@@ -94,19 +94,35 @@
 
         var handler = new JwtSecurityTokenHandler();
         var tokenClaims = handler.ReadJwtToken(tokenString) as JwtSecurityToken;
-        Claim[] claims = tokenClaims.Claims.ToArray();
+        List<Claim> claims = tokenClaims.Claims.ToList();
+
+        for (int i = 0; i < claims.Count; i++)
+        {
+            if (claims[i].Type == "unique_name")
+            {
+                claims.Add(new Claim(ClaimTypes.Name, claims[i].Value));
+            }
+            else if (claims[i].Type == "role")
+            {
+                claims.Add(new Claim(ClaimTypes.Role, claims[i].Value));
+            }
+        }
+        claims.RemoveAll(c => c.Type == "role");
+        claims.RemoveAll(c => c.Type == "unique_name");
 
         var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
         var user = new ClaimsPrincipal(claimsIdentity);
 
         var principal = new ClaimsPrincipal(user);
         await httpContext.SignInAsync(principal);
+
         
-        //for debugging
-        for (int i = 0; i < claims.Length; i++)
-        {
-            Logger.LogWarning(claims[i].Type + ": " + claims[i].Value);
-        }
+        
+        // for (int i = 0; i < claims.Count; i++)
+        // {
+        //     Logger.LogWarning(claims[i].Type + ": " + claims[i].Value);
+        // }
+
         Logger.LogWarning("Succesful login!");
         NavigationManager.NavigateTo("/");
     }
