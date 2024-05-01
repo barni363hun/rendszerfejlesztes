@@ -1,0 +1,74 @@
+﻿@page "/newManager"
+@using ClassLibrary.DTOs
+@using Microsoft.AspNetCore.Authorization
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ILogger<Projects> Logger
+@using Newtonsoft.Json
+@using System.Text
+@attribute [Authorize(Roles = "Admin")]
+
+<div>
+    <EditForm Model="@manager" OnValidSubmit="Create" FormName="ManagerForm">
+        <DataAnnotationsValidator />
+        <div>
+            <label>Email</label>
+            <InputText @bind-Value="manager.Email" placeholder="Email" />
+        </div>
+        <div>
+            <label>Name</label>
+            <InputText @bind-Value="manager.Name" placeholder="Name"/>
+        </div>
+        <div>
+            <label>Password</label>
+            <InputText @bind-Value="manager.Password" placeholder="Password" type="password" />
+        </div>
+        <div>
+            <button type="submit">Create</button>
+        </div>
+    </EditForm>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    public ManagerDTO manager { get; set; } = new();
+
+    private async Task Create()
+    {
+        Logger.LogWarning("Button pushed");
+        var settings = new JsonSerializerSettings();
+        try
+        {
+            HttpClient httpClient = new HttpClient();
+            string json = JsonConvert.SerializeObject(manager);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            // Access the ClaimsPrincipal representing the authenticated user
+            var user = authState.User;
+            string authToken = user.FindFirst("authToken").Value;
+            httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
+
+            HttpResponseMessage response = await httpClient.PostAsync("http://localhost:5005/manager", content);
+            Logger.LogWarning(json);
+            var result = await response.Content.ReadAsStringAsync();
+            
+            if (response.IsSuccessStatusCode)
+            {
+                Logger.LogWarning("API successful");
+            }
+            else
+            {
+                Logger.LogWarning("Unsuccesful api request!");
+                Logger.LogWarning(response.StatusCode.ToString());
+                //json = await response.Content.ReadAsStringAsync();
+                Logger.LogWarning(result);
+                return;
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogWarning(ex.Message);
+            return;
+        }
+    }
+}
