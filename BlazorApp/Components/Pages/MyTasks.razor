@@ -3,6 +3,7 @@
 @using Microsoft.AspNetCore.Authorization
 @using Newtonsoft.Json
 @using System.Text
+@using System.Net.WebSockets;
 @inject ILogger<Projects> Logger
 @rendermode InteractiveServer
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -11,6 +12,19 @@
 
 
 <PageTitle>My Tasks</PageTitle>
+
+<h1>Echo test</h1>
+<h3>State: @webSocket.State</h3>
+
+@if (webSocket.State == WebSocketState.Open)
+{
+    <form @onsubmit="@SendMessageAsync">
+        Message: <input @bind="@message" />
+        <button type="submit">Send</button>
+    </form>
+
+    <pre>@log</pre>
+}
 
 <h1>My Tasks</h1>
 
@@ -76,6 +90,8 @@ else
         {
             // Extract the value of the claim
             managerId = Convert.ToInt32(managerIdClaim.Value);
+            await webSocket.ConnectAsync(new Uri("wss://ws.postman-echo.com/raw"), disposalTokenSource.Token);
+            _ = ReceiveLoop();
         }
         else
         {
@@ -115,4 +131,35 @@ else
         
     }
 
+}
+@code {
+    CancellationTokenSource disposalTokenSource = new CancellationTokenSource();
+    ClientWebSocket webSocket = new ClientWebSocket();
+    string message = "Hello, websocket!";
+    string log = "";
+
+    async Task SendMessageAsync()
+    {
+        log += $"Sending: {message}\n";
+        var dataToSend = new ArraySegment<byte>(Encoding.UTF8.GetBytes(message));
+        await webSocket.SendAsync(dataToSend, WebSocketMessageType.Text, true, disposalTokenSource.Token);
+    }
+
+    async Task ReceiveLoop()
+    {
+        var buffer = new ArraySegment<byte>(new byte[1024]);
+        while (!disposalTokenSource.IsCancellationRequested)
+        {
+            var received = await webSocket.ReceiveAsync(buffer, disposalTokenSource.Token);
+            var receivedAsText = Encoding.UTF8.GetString(buffer.Array, 0, received.Count);
+            log += $"Received: {receivedAsText}\n";
+            StateHasChanged();
+        }
+    }
+
+    public void Dispose()
+    {
+        disposalTokenSource.Cancel();
+        _ = webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Bye", CancellationToken.None);
+    }
 }

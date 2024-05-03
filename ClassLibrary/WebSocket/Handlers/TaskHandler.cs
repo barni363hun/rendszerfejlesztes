@@ -7,6 +7,7 @@ namespace ClassLibrary.WebSocket.Handlers
     {
         public TaskHandler(ConnectionManager webSocketConnectionManager) : base(webSocketConnectionManager)
         {
+
         }
 
         public override async Task ReceiveAsync(System.Net.WebSockets.WebSocket socket, WebSocketReceiveResult result, byte[] buffer)
