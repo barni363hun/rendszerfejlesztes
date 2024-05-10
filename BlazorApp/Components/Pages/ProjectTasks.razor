@@ -74,7 +74,10 @@ else
     protected override async Task OnInitializedAsync()
     {
 
-        await webSocket.ConnectAsync(new Uri("wss://ws.postman-echo.com/raw"), disposalTokenSource.Token);
+        //var socket = new WebSocket("wss://localhost:8888/ws");
+        //await webSocket.ConnectAsync(new Uri("wss://ws.postman-echo.com/raw"), disposalTokenSource.Token);
+        await webSocket.ConnectAsync(new Uri("wss://localhost:5120/task/ws"), disposalTokenSource.Token);
+        //await webSocket.ConnectAsync(new Uri("wss://ws.postman-echo.com/raw"), disposalTokenSource.Token);
         _ = ReceiveLoop();
         var settings = new JsonSerializerSettings();
         try
@@ -191,7 +194,7 @@ else
 @code {
     CancellationTokenSource disposalTokenSource = new CancellationTokenSource();
     ClientWebSocket webSocket = new ClientWebSocket();
-    string message = "DEFAULT VALUE FOR STRING: MESSAGE";
+    string message = "DEFAULT VALUE FOR STRING: message";
     string log = "";
 
     async Task SendMessageAsync()

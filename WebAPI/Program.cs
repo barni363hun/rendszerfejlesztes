@@ -37,7 +37,9 @@ internal class Program
 
         builder.Services.AddWebSocketManager();
 
+
         var app = builder.Build();
+        app.UseHttpsRedirection();
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
@@ -51,10 +53,12 @@ internal class Program
                     .AllowAnyMethod()
                     .AllowAnyHeader());
 
-        app.UseWebSockets();
+        //app.UseWebSockets();
         var serviceScopeFactory = app.Services.GetRequiredService<IServiceScopeFactory>();
         var serviceProvider = serviceScopeFactory.CreateScope().ServiceProvider;
-        app.MapWebSocketManager("/task/ws", serviceProvider.GetService<TaskHandler>());
+        //app.MapWebSocketManager("/task/ws", serviceProvider.GetService<TaskHandler>());
+        app.UseWebSockets();//Websocketek használatához szükséges
+        app.MapWebSocketManager("/ws", serviceProvider.GetService<TaskHandler>());
 
         app.UseAuthentication();
         app.UseAuthorization();

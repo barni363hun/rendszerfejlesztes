@@ -1,4 +1,5 @@
 ﻿using System.Net.WebSockets;
+using ClassLibrary.WebSocket;
 using System.Text;
 
 namespace ClassLibrary.WebSocket.Handlers
@@ -12,9 +13,9 @@ namespace ClassLibrary.WebSocket.Handlers
 
         public override async Task ReceiveAsync(System.Net.WebSockets.WebSocket socket, WebSocketReceiveResult result, byte[] buffer)
         {
-            var message = $"Új feladat lett rögzítve: {Encoding.UTF8.GetString(buffer, 0, result.Count)}";
+            var message = $"Ezt küldte a kliens: {Encoding.UTF8.GetString(buffer, 0, result.Count)}";
 
-            await SendMessageToAllAsync(message);
+            await SendMessageToAllAsync(message);//A kliens által küldött üzenetet visszaküldjük az összes csatlakozott kliensnek
         }
     }
 }
