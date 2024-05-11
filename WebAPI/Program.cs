@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using WebAPI;
+using WebAPI.Controllers;
 
 
 
@@ -37,6 +38,8 @@ internal class Program
 
         builder.Services.AddWebSocketManager();
 
+        builder.Services.AddSignalR();
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -60,6 +63,8 @@ internal class Program
         app.UseAuthorization();
 
         app.MapControllers();
+
+        app.MapHub<TaskHub>("/TaskHub");
 
         app.Run();
     }

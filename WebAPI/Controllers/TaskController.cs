@@ -6,6 +6,9 @@ using System.Text.Json.Serialization;
 using System.Text.Json;
 using ClassLibrary.DTOs;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.SignalR;
+using System.Net.Http.Json;
+using Newtonsoft.Json;
 
 
 namespace WebAPI.Controllers
@@ -17,6 +20,7 @@ namespace WebAPI.Controllers
     {
 
         private readonly DataContext _context;
+        private readonly IHubContext<TaskHub> _hubContext;
         public TaskController(DataContext context)
         {
             this._context = context;
@@ -54,6 +58,9 @@ namespace WebAPI.Controllers
             };
             await _context.Tasks.AddAsync(newTask);
             await _context.SaveChangesAsync();
+
+            await _hubContext.Clients.All.SendAsync("NewTask", JsonConvert.SerializeObject(task));
+
             return Ok();
         }
     }

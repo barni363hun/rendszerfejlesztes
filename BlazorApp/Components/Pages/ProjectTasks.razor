@@ -1,6 +1,7 @@
 ﻿@page "/projects/{projectId}/tasks"
 @using ClassLibrary.Models
 @using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.SignalR.Client
 @using Newtonsoft.Json
 @using System.Text
 @inject ILogger<Projects> Logger
@@ -12,6 +13,8 @@
 
 
 <PageTitle>Tasks for project @projectId</PageTitle>
+
+<h3>@connectionStatus</h3>
 
 <h1>Tasks for project @projectId</h1>
 
@@ -56,6 +59,13 @@ else
 }
 
 @code {
+    string url = "http://localhost:5005/TaskHub";
+    HubConnection _connection = null;
+    string connectionStatus = "Closed";
+
+
+
+
     [CascadingParameter]
     public HttpContext? httpContext { get; set; }
     [Parameter]
@@ -67,10 +77,11 @@ else
     private string newTaskName;
     private string newTaskDescription;
     private DateTime newTaskDeadline = DateTime.Today.AddMonths(2); // Set default date to two months from current date
+    JsonSerializerSettings settings = new JsonSerializerSettings();
 
     protected override async Task OnInitializedAsync()
     {
-        var settings = new JsonSerializerSettings();
+        await ConnectToServer();
         try
         {
             HttpClient httpClient = new HttpClient();
@@ -120,7 +131,7 @@ else
                 Logger.LogWarning("Id was null");
                 managerId = -1;
             }
-            Logger.LogWarning("User id:" + managerId);
+            //Logger.LogWarning("User id:" + managerId);
         }
 
         ClassLibrary.Model.Task newTask = new ClassLibrary.Model.Task
@@ -146,7 +157,8 @@ else
             {
                 Logger.LogWarning("Unsuccesful api post!");
                 Logger.LogWarning(response.StatusCode.ToString());
-                //json = await response.Content.ReadAsStringAsync();
+                Logger.LogWarning(response.ReasonPhrase);
+                json = await response.Content.ReadAsStringAsync();
                 Logger.LogWarning(json);
             }
 
@@ -155,17 +167,36 @@ else
         {
             Logger.LogWarning(ex.Message);
         }
-        
-        NavigationManager.NavigateTo(NavigationManager.Uri, true);
+
+        //NavigationManager.NavigateTo(NavigationManager.Uri, true);
         // tasks.Add(newTask);
 
         // // Clear input fields after adding task
-        // newTaskName = string.Empty;
-        // newTaskDescription = string.Empty;
-        // newTaskDeadline = DateTime.Today;
+        newTaskName = string.Empty;
+        newTaskDescription = string.Empty;
+        newTaskDeadline = DateTime.Today.AddMonths(2);
     }
 
 
+    private async Task ConnectToServer()
+    {
+        _connection = new HubConnectionBuilder()
+            .WithUrl(url)
+            .Build();
 
+        await _connection.StartAsync();
+        connectionStatus = "Connected";
+
+        _connection.Closed += async (s) =>
+        {
+            connectionStatus = "Closed";
+            await _connection.StartAsync();
+            _connection.On<string>("NewTask", m =>
+        {
+            tasks.Add(JsonConvert.DeserializeObject<ClassLibrary.Model.Task>(m, settings));
+            StateHasChanged();
+        });
+        };
+    }
 
 }
