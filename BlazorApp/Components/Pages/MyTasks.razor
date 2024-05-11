@@ -1,13 +1,13 @@
 ﻿@page "/mytasks"
 @using ClassLibrary.Models
 @using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.SignalR.Client
 @using Newtonsoft.Json
 @using System.Text
 @inject ILogger<Projects> Logger
-@rendermode InteractiveServer
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @attribute [Authorize(Roles = "Admin, Manager")]
-@attribute [StreamRendering]
+@rendermode InteractiveServer
 
 
 <PageTitle>My Tasks</PageTitle>
@@ -59,6 +59,9 @@ else
     [CascadingParameter]
     public HttpContext? httpContext { get; set; }
 
+    string url = "http://localhost:5005/TaskHub";
+    HubConnection _connection = null;
+    JsonSerializerSettings settings = new JsonSerializerSettings();
 
     private List<ClassLibrary.Model.Task>? tasks;
 
@@ -66,7 +69,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-
+        await ConnectToServer();
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         // Access the ClaimsPrincipal representing the authenticated user
         var user = authState.User;
@@ -86,7 +89,7 @@ else
         Logger.LogWarning("User id:" + managerId);
 
 
-        var settings = new JsonSerializerSettings();
+        
         try
         {
             HttpClient httpClient = new HttpClient();
@@ -94,7 +97,7 @@ else
             string authToken = user.FindFirst("AuthToken").Value;
 
             httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
-            
+
             HttpResponseMessage response = await httpClient.GetAsync("http://localhost:5005/Task");
             string result = await response.Content.ReadAsStringAsync();
             //Logger.LogWarning(result);
@@ -112,7 +115,34 @@ else
         {
             Logger.LogWarning("api failed: " + ex.Message);
         }
-        
+
+    }
+    private async Task ConnectToServer()
+    {
+        _connection = new HubConnectionBuilder()
+            .WithUrl(url)
+            .Build();
+
+        await _connection.StartAsync();
+        Logger.LogWarning("Connected");
+
+        _connection.Closed += async (s) =>
+        {
+            Logger.LogWarning("Disconnected");
+            await _connection.StartAsync();
+        };
+        _connection.On<string>("NewTask", m =>
+        {
+            ClassLibrary.Model.Task newTask = JsonConvert.DeserializeObject<ClassLibrary.Model.Task>(m, settings);
+            tasks.Add(newTask);
+            InvokeAsync(() =>
+            {
+                // UI update code here
+                StateHasChanged(); // If necessary, to trigger a re-render
+            });
+            Logger.LogWarning("My tasks: New task added");
+            
+        });
     }
 
 }

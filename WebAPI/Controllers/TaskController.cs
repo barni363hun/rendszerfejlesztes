@@ -21,9 +21,10 @@ namespace WebAPI.Controllers
 
         private readonly DataContext _context;
         private readonly IHubContext<TaskHub> _hubContext;
-        public TaskController(DataContext context)
+        public TaskController(DataContext context, IHubContext<TaskHub> hubContext)
         {
             this._context = context;
+            _hubContext = hubContext;
         }
 
         [HttpGet]
@@ -59,7 +60,11 @@ namespace WebAPI.Controllers
             await _context.Tasks.AddAsync(newTask);
             await _context.SaveChangesAsync();
 
-            await _hubContext.Clients.All.SendAsync("NewTask", JsonConvert.SerializeObject(task));
+
+            newTask.manager = null;
+            newTask.project = null;
+            string taskString = JsonConvert.SerializeObject(newTask);
+            await _hubContext.Clients.All.SendAsync("NewTask", taskString);
 
             return Ok();
         }

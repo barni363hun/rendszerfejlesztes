@@ -5,11 +5,10 @@
 @using Newtonsoft.Json
 @using System.Text
 @inject ILogger<Projects> Logger
-@attribute [StreamRendering]
-@rendermode InteractiveServer
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @attribute [Authorize(Roles = "Admin, Manager")]
+@rendermode InteractiveServer
 
 
 <PageTitle>Tasks for project @projectId</PageTitle>
@@ -49,7 +48,7 @@ else
                 }
             }
             <tr>
-                <td><button @onclick="AddTask">Add New Task</button></td>
+                <td><button @onclick="async () => await AddTask()">Add New Task</button></td>
                 <td><input type="text" @bind="newTaskName" placeholder="Enter task name" /></td>
                 <td><input type="text" @bind="newTaskDescription" placeholder="Enter task description" /></td>
                 <td><input type="date" @bind="newTaskDeadline" /></td>
@@ -71,13 +70,14 @@ else
     [Parameter]
     public string projectId { get; set; }
 
-    private List<ClassLibrary.Model.Task>? tasks;
+    private List<ClassLibrary.Model.Task>? tasks = new List<ClassLibrary.Model.Task>();
 
     private int managerId;
     private string newTaskName;
     private string newTaskDescription;
     private DateTime newTaskDeadline = DateTime.Today.AddMonths(2); // Set default date to two months from current date
     JsonSerializerSettings settings = new JsonSerializerSettings();
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -112,12 +112,12 @@ else
         }
     }
 
-    private async void AddTask()
+    private async Task AddTask()
     {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        // Access the ClaimsPrincipal representing the authenticated user
+        var user = authState.User;
         {
-            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-            // Access the ClaimsPrincipal representing the authenticated user
-            var user = authState.User;
             // Find the claim with the specific type ("Id")
             var managerIdClaim = user.FindFirst("Id");
             if (managerIdClaim != null)
@@ -148,6 +148,10 @@ else
             HttpClient httpClient = new HttpClient();
             string json = JsonConvert.SerializeObject(newTask);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            string authToken = user.FindFirst("authToken").Value;
+            httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
+
             HttpResponseMessage response = await httpClient.PostAsync("http://localhost:5005/Task", content);
             if (response.IsSuccessStatusCode)
             {
@@ -191,12 +195,20 @@ else
         {
             connectionStatus = "Closed";
             await _connection.StartAsync();
-            _connection.On<string>("NewTask", m =>
-        {
-            tasks.Add(JsonConvert.DeserializeObject<ClassLibrary.Model.Task>(m, settings));
-            StateHasChanged();
-        });
         };
+        _connection.On<string>("NewTask", m =>
+        {
+            ClassLibrary.Model.Task newTask = JsonConvert.DeserializeObject<ClassLibrary.Model.Task>(m, settings);
+            tasks.Add(newTask);
+            InvokeAsync(() =>
+            {
+                // UI update code here
+                StateHasChanged(); // If necessary, to trigger a re-render
+            });
+            Logger.LogWarning("Project tasks: New task added");
+
+        });
     }
+
 
 }
