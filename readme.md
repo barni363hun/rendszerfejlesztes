@@ -17,3 +17,4 @@
 - itt hozzáadhatunk új task-ot is a projekthez
 - a My Tasks oldalon a manager megnézheti melyik task-okat hozta ő létre
 - ezek közül amelyik le fog járni a következő két napban annak a határideje piros
+- Websocket: A MyTasks és Project Tasks oldalakon a azonnal frissülnek a task listák amikor újat adunk hozzá
